@@ -16,6 +16,11 @@ export const POSTERS_QUERY = defineQuery(`
   }
 `)
 
+// How many posters the home page shows (the same filter as POSTERS_QUERY).
+export const POSTER_COUNT_QUERY = defineQuery(`
+  count(*[_type == "poster" && defined(image.asset)])
+`)
+
 export const PROJECT_SLUGS_QUERY = defineQuery(`
   *[_type == "poster" && defined(slug.current)]{"slug": slug.current}
 `)

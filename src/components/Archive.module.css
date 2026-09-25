@@ -42,42 +42,6 @@
   }
 }
 
-/* The giant “23FPS” behind the posters */
-/* Fixed, not absolute: it's 100vh tall, which in iOS Safari is taller than the
-   visible page (100dvh) and would otherwise make the whole page scrollable. */
-.hoverContainer {
-  position: fixed;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  text-align: center;
-  pointer-events: none;
-}
-
-.counter {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  margin-right: 18px;
-  font-family: var(--font-condensed);
-  font-size: calc(100vw / 2.38);
-  line-height: 100vh;
-  letter-spacing: -20px;
-  white-space: nowrap;
-  text-align: center;
-  transform: translateY(-11%);
-  transition: all 300ms ease-in-out;
-}
-
-/* Fades back while a poster is zoomed. */
-.counter[data-dimmed='true'] {
-  opacity: 0.2;
-}
-
 /* Credits along the bottom */
 .credits {
   position: relative;
@@ -172,9 +136,6 @@
 }
 
 @media screen and (min-width: 2239px) and (max-width: 2800px) {
-  .counter {
-    letter-spacing: -40px;
-  }
   .page {
     --thumb-width: 76px;
     --thumb-gap: 36px;
@@ -185,10 +146,6 @@
 }
 
 @media screen and (min-width: 2801px) and (max-width: 3699px) {
-  .counter {
-    letter-spacing: -56px;
-    transform: translateY(-6%);
-  }
   .page {
     --thumb-width: 82px;
     --thumb-gap: 50px;
@@ -208,45 +165,6 @@
 
   .name {
     font-size: 11.5px;
-  }
-
-  /* A little above the middle of the screen, until the first touch or scroll.
-     Across the page: the number at the left margin, “FPS” at the right. */
-  .counter {
-    top: 46%;
-    left: 8px;
-    right: 8px;
-    width: auto;
-    height: auto;
-    margin: 0;
-    display: grid;
-    line-height: 1;
-    letter-spacing: -10px;
-    transform: translateY(-50%);
-  }
-
-  /* Both in the same cell, so on wider screens they can close up rather than
-     push “FPS” past the margin. */
-  .counter span {
-    grid-area: 1 / 1;
-    justify-self: start;
-  }
-
-  .counter span:last-child {
-    justify-self: end;
-    /* Letter-spacing follows the last letter too; undo it so the S ends at the margin. */
-    margin-right: 10px;
-  }
-
-  /* Then halfway between the top bar (16pt) and the top of a large poster: as
-     wide as the strip allows (all but the page margins and a thumbnail each
-     side), √2 times as tall for a typical poster, 10px off the bottom. */
-  .counter[data-raised='true'] {
-    --poster-top: calc(
-      100dvh - 10px - (100vw - 16px - 2 * (var(--thumb-width) + var(--thumb-gap))) * 1.414
-    );
-    /* Less 0.044em to centre the digits, rather than the line, on that point. */
-    top: calc((16pt + var(--poster-top)) / 2 - 0.044em);
   }
 
   .carousel {
@@ -272,14 +190,5 @@
 
   .name {
     margin-right: 20px;
-  }
-}
-
-/* Small phones (iPhone 6/7/8/SE and the like): a smaller counter, as there's
-   less room above the posters. By screen height, which unlike the viewport's
-   doesn't shrink under the browser's toolbars. */
-@media screen and (max-width: 800px) and (max-device-height: 700px) {
-  .counter {
-    font-size: calc(100vw / 2.8);
   }
 }

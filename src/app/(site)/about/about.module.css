@@ -1,6 +1,11 @@
 /* Ported from legacy/style_contact.css. The old page rendered entirely in the
    bold cut (a duplicate @font-face overrode the regular one), so bold it stays. */
 
+/* Swipes step the counter (AboutCounter.tsx); the page mustn't rubber-band along. */
+:global(html):has(.page) {
+  overscroll-behavior: none;
+}
+
 .page {
   min-height: 100vh;
   display: flex;
@@ -24,11 +29,14 @@
   text-decoration: none;
 }
 
+.close {
+  text-transform: uppercase;
+}
+
 .text {
-  line-height: 14pt;
-  letter-spacing: 0.2px;
-  text-align: justify;
-  text-align-last: center;
+  column-count: 2;
+  column-gap: 14px;
+  line-height: 12pt;
 }
 
 .text p {
@@ -36,7 +44,7 @@
   margin: 0;
 }
 
-/* The old page ran its paragraphs together into one justified block; keep that look. */
+/* The old page ran its paragraphs together into one block; keep that look. */
 .text p + p::before {
   content: ' ';
 }
@@ -60,8 +68,6 @@
   .text {
     padding-bottom: 88px;
     letter-spacing: 0.5px;
-    text-align: left;
-    text-align-last: left;
   }
 
   .colophon {

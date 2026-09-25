@@ -39,6 +39,7 @@ npx sanity cors add https://your-domain.com --credentials
 | Path | What |
 | --- | --- |
 | `src/components/Archive.tsx` | Home page: header, FPS counter, credits |
+| `src/components/Counter.tsx` | The big “23FPS” counter on the home and About pages; `AboutCounter.tsx` steps it 00 → 23 as you scroll on About |
 | `src/components/PosterCarousel.tsx` | The looping poster strip: scroll/click to enlarge the centre poster, click it again to open its project page |
 | `src/components/Cursor.tsx` | The mouse pointer as a word: Scroll / View More / Close (not on touch screens) |
 | `src/components/Information.tsx` | Top bar: FPS Archive · “Title” Year · Index, About |

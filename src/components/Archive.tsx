@@ -4,6 +4,7 @@ import {useEffect, useState} from 'react'
 
 import type {Poster} from '@/sanity/queries'
 
+import {Counter} from './Counter'
 import {Cursor} from './Cursor'
 import {Information} from './Information'
 import {PosterCarousel} from './PosterCarousel'
@@ -21,9 +22,6 @@ export function Archive({posters}: {posters: Poster[]}) {
   // Poster in the centre of the strip once the visitor has scrolled or clicked:
   // its title and credits show, and its number replaces the count, e.g. 05FPS.
   const [selected, setSelected] = useState<{index: number; large: boolean} | null>(null)
-  // Set on the first touch, click, scroll or key press; on phones the counter
-  // then moves up out of the posters' way.
-  const [raised, setRaised] = useState(false)
 
   useEffect(() => {
     if (total === 0) return
@@ -36,14 +34,6 @@ export function Archive({posters}: {posters: Poster[]}) {
     return () => window.clearInterval(id)
   }, [total])
 
-  useEffect(() => {
-    if (raised) return
-    const raise = () => setRaised(true)
-    const events = ['pointerdown', 'wheel', 'keydown'] as const
-    events.forEach((type) => window.addEventListener(type, raise, {passive: true}))
-    return () => events.forEach((type) => window.removeEventListener(type, raise))
-  }, [raised])
-
   const current = selected ? posters[selected.index] : undefined
   const counter = selected ? pad(selected.index + 1) : String(count)
 
@@ -51,13 +41,7 @@ export function Archive({posters}: {posters: Poster[]}) {
     <div className={styles.page}>
       <Information title={current?.title} year={current?.year} />
 
-      <div className={styles.hoverContainer} aria-hidden>
-        <div className={styles.counter} data-dimmed={Boolean(selected?.large)} data-raised={raised}>
-          {/* Two parts, so phones can push them to either side. */}
-          <span>{counter}</span>
-          <span>FPS</span>
-        </div>
-      </div>
+      <Counter value={counter} dimmed={Boolean(selected?.large)} />
 
       <PosterCarousel posters={posters} onChange={(index, large) => setSelected({index, large})} />
 
