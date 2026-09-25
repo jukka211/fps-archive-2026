@@ -8,6 +8,12 @@
 
 .page {
   min-height: 100vh;
+  /* The visible height: on phones, excludes the browser's toolbars, so the text
+     at the bottom isn't hidden under them. */
+  min-height: 100dvh;
+  box-sizing: border-box;
+  /* As on the home page. */
+  padding-bottom: 10px;
   display: flex;
   flex-direction: column;
   font-family: var(--font-bold);
@@ -33,9 +39,14 @@
   text-transform: uppercase;
 }
 
+/* At the bottom of the page. */
 .text {
+  margin-top: auto;
+  /* With the page's 8px margins: 10px from the screen edges. */
+  padding: 0 2px;
+  font-family: var(--font-regular);
   column-count: 2;
-  column-gap: 14px;
+  column-gap: 12px;
   line-height: 12pt;
 }
 
@@ -49,29 +60,8 @@
   content: ' ';
 }
 
-.colophon {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 8px;
-  line-height: 14pt;
-  letter-spacing: 0.2px;
-  text-align: center;
-}
-
-/* Paragraph margins kept: the old credit line sat 8px + 1em above the bottom edge. */
-.colophon p {
-  margin: 1em 0;
-}
-
 @media (max-width: 1000px) {
   .text {
-    padding-bottom: 88px;
     letter-spacing: 0.5px;
-  }
-
-  .colophon {
-    padding-left: 10px;
-    text-align: left;
   }
 }

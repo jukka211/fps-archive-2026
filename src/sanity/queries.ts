@@ -30,7 +30,7 @@ export const PROJECT_QUERY = defineQuery(`
 `)
 
 export const ABOUT_QUERY = defineQuery(`
-  *[_id == "about"][0]{body, colophon}
+  *[_id == "about"][0]{body}
 `)
 
 export type Credit = {
@@ -61,5 +61,4 @@ export type Project = {
 
 export type About = {
   body: PortableTextBlock[] | null
-  colophon: PortableTextBlock[] | null
 } | null

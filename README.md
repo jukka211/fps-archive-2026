@@ -11,7 +11,7 @@ Next.js 16 site with Sanity for content, deployed on Vercel.
 Open `/studio` on the live site (or `http://localhost:3000/studio` locally).
 
 - **Project-Posters**: film title, page URL (click “Generate”), year, poster image (WebP/JPG/PNG or animated GIF) and credits (the first three show along the bottom of the home page). Drag posters to reorder them; the order here is the order on the site; the counter shows the number of posters (`23FPS`).
-- **About**: the text and the credit line at the bottom.
+- **About**: the text (the credit line isn't shown on the site at the moment).
 
 Published changes go live without a redeploy. When you publish in `/studio`, the Studio tells the site to refresh its cached pages; the first visitor after an edit may still get the previous version, and the next one gets the new version.
 

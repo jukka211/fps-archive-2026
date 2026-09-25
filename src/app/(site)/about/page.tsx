@@ -35,9 +35,6 @@ export default async function AboutPage() {
       <div className={styles.text}>
         {about?.body ? <PortableText value={about.body} components={components} /> : null}
       </div>
-      <div className={styles.colophon}>
-        {about?.colophon ? <PortableText value={about.colophon} components={components} /> : null}
-      </div>
     </div>
   )
 }

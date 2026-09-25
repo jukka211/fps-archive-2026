@@ -40,7 +40,7 @@ export const about = defineType({
     }),
     defineField({
       name: 'colophon',
-      description: 'Credit line pinned to the bottom of the About page.',
+      description: 'Credit line. Not shown on the site at the moment.',
       type: 'array',
       of: [simpleBlock],
     }),
