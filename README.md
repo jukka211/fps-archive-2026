@@ -38,8 +38,9 @@ npx sanity cors add https://your-domain.com --credentials
 
 | Path | What |
 | --- | --- |
-| `src/components/Archive.tsx` | Home page: poster columns, hover/zoom, FPS counter, mobile thumbnail strip |
-| `src/components/Archive.module.css` | Its styles, ported from the original `style.css` |
+| `src/components/Archive.tsx` | Home page: header, FPS counter, credits |
+| `src/components/PosterCarousel.tsx` | The looping poster strip: scroll/click to enlarge the centre poster |
+| `src/components/Archive.module.css` | Styles for both, incl. strip sizes per screen width (`--thumb-width`, `--thumb-gap`, `--scroll-step`) |
 | `src/app/(site)/about/` | About page |
 | `src/app/(studio)/studio/` | Embedded Sanity Studio |
 | `src/sanity/schemaTypes/` | Content model (`poster`, `about`) |
