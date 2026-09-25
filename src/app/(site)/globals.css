@@ -1,3 +1,9 @@
+/* Phone browsers mustn't enlarge longer bits of text (e.g. a film title) on their own. */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 /* Background lives on body only, so it propagates to the canvas. */
 body {
   margin: 0 8px;

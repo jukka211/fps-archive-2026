@@ -1,0 +1,30 @@
+/* The word that stands in for the mouse pointer (Cursor.tsx). Not on touch screens. */
+.cursor {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    /* Centred on the pointer. */
+    translate: -50% -50%;
+    font-family: var(--font-bold);
+    font-size: 10pt;
+    line-height: 16pt;
+    white-space: nowrap;
+    text-transform: uppercase;
+    color: #fff;
+    /* Stays readable on light posters. */
+    mix-blend-mode: difference;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .cursor[data-hidden='true'] {
+    visibility: hidden;
+  }
+}

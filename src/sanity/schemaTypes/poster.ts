@@ -43,7 +43,8 @@ export const poster = defineType({
     }),
     defineField({
       name: 'credits',
-      description: 'Shown along the bottom of the page, in this order. Put Poster Design first.',
+      description:
+        'In this order. The first three are shown along the bottom of the home page, so put Poster Design first.',
       type: 'array',
       of: [
         defineArrayMember({

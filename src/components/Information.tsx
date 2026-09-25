@@ -2,13 +2,15 @@ import Link from 'next/link'
 
 import styles from './Information.module.css'
 
-/** Top bar on the home and project pages: FPS Archive · “Title” Year · About. */
+/** Top bar on the home, project and index pages: FPS Archive · “Title” Year · Index, About. */
 export function Information({title, year}: {title?: string | null; year?: number | null}) {
   return (
     <header className={styles.information}>
-      <Link href="/">FPS Archive</Link>
+      <Link href="/" className={styles.home}>FPS Archive</Link>
       <span className={styles.title}>{title ? `“${title}”${year ? ` ${year}` : ''}` : null}</span>
-      <Link href="/about">About</Link>
+      <nav className={styles.nav}>
+        <Link href="/projects">Index</Link>, <Link href="/about">About</Link>
+      </nav>
     </header>
   )
 }

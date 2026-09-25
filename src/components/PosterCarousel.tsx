@@ -67,9 +67,12 @@ export function PosterCarousel({
 
   // Once the scroll track has its width, scroll to the current step (the
   // middle of the loop at first). Programmatic, so it doesn't count as a scroll.
+  // Only when the step size changes: other resizes (e.g. the top bar growing a
+  // line) mustn't cut short a swipe.
+  const stepSize = metrics?.step
   useLayoutEffect(() => {
-    if (metrics && scrollerRef.current) scrollerRef.current.scrollLeft = stepRef.current * metrics.step
-  }, [metrics])
+    if (stepSize && scrollerRef.current) scrollerRef.current.scrollLeft = stepRef.current * stepSize
+  }, [stepSize])
 
   // Mouse wheels scroll vertically: turn that into sideways scrolling, anywhere
   // on the page. Arrow keys step through the posters too.
@@ -96,6 +99,18 @@ export function PosterCarousel({
     }
   }, [metrics])
 
+  // While a poster is large, a click anywhere but on it shrinks it back.
+  useEffect(() => {
+    if (!large) return
+    const onDocumentClick = (e: MouseEvent) => {
+      if (e.target instanceof Element && e.target.closest('[data-distance="0"]')) return
+      setLarge(false)
+      onChange(mod(stepRef.current, total), false)
+    }
+    document.addEventListener('click', onDocumentClick)
+    return () => document.removeEventListener('click', onDocumentClick)
+  }, [large, onChange, total])
+
   function onScroll() {
     const el = scrollerRef.current
     if (!el || !metrics) return
@@ -113,8 +128,9 @@ export function PosterCarousel({
       if (large && posters[index].slug) return
       setLarge(!large)
       onChange(index, !large)
-    } else if (metrics) {
-      // Scrolling it to the centre makes it the large one.
+    } else if (!large && metrics) {
+      // Scrolling it to the centre makes it the large one. (While one is large,
+      // the click shrinks it back instead; see the effect above.)
       scrollerRef.current?.scrollTo({left: (stepRef.current + distance) * metrics.step, behavior: 'smooth'})
     }
   }
@@ -164,6 +180,7 @@ export function PosterCarousel({
                 href={`/projects/${poster.slug}`}
                 className={styles.carouselLink}
                 aria-label={`Open “${poster.title}”`}
+                data-cursor="View More"
               />
             ) : null}
           </motion.div>

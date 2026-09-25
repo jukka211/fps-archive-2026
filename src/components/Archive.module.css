@@ -20,11 +20,26 @@
   height: 100vh;
   /* The visible height: on phones, excludes the browser's toolbars (e.g. Safari's bottom bar). */
   height: 100dvh;
+  box-sizing: border-box;
+  /* Space below the poster strip. */
+  padding-bottom: 10px;
   display: flex;
   flex-direction: column;
-  cursor: none;
   /* Sideways swipes (strip, credits) and pinch-zoom only; no vertical page panning. */
   touch-action: pan-x pinch-zoom;
+}
+
+/* With a mouse, the pointer is a word (Cursor.tsx), except over the links in the
+   top bar and credits. */
+@media (hover: hover) and (pointer: fine) {
+  .page,
+  .page * {
+    cursor: none;
+  }
+
+  .page a:not([data-cursor]) {
+    cursor: pointer;
+  }
 }
 
 /* The giant “23FPS” behind the posters */
@@ -74,6 +89,11 @@
   align-items: center;
 }
 
+/* Credits hidden for now: delete this rule to show them again. */
+.credits {
+  display: none;
+}
+
 .creditRow {
   width: 100%;
   display: flex;
@@ -88,14 +108,16 @@
   font-family: var(--font-bold);
   font-size: 10pt;
   line-height: 16pt;
+  text-transform: uppercase;
 }
 
 .name a {
   color: #fff;
 }
 
+/* Same bold cut as the name, but not in capitals. */
 .role {
-  font-family: var(--font-regular);
+  text-transform: none;
 }
 
 /* Poster strip (PosterCarousel.tsx). The scroll track only provides scroll
@@ -134,7 +156,6 @@
   position: absolute;
   left: 0;
   bottom: 0;
-  cursor: pointer;
 }
 
 .carouselCard img {
@@ -189,10 +210,24 @@
     font-size: 11.5px;
   }
 
+  /* A little above the middle of the screen, until the first touch or scroll. */
   .counter {
-    bottom: 0;
+    top: 46%;
+    height: auto;
+    line-height: 1;
     letter-spacing: -10px;
-    transform: translateY(-4%);
+    transform: translateY(-50%);
+  }
+
+  /* Then halfway between the top bar (16pt) and the top of a large poster: as
+     wide as the strip allows (all but the page margins and a thumbnail each
+     side), √2 times as tall for a typical poster, 10px off the bottom. */
+  .counter[data-raised='true'] {
+    --poster-top: calc(
+      100dvh - 10px - (100vw - 16px - 2 * (var(--thumb-width) + var(--thumb-gap))) * 1.414
+    );
+    /* Less 0.044em to centre the digits, rather than the line, on that point. */
+    top: calc((16pt + var(--poster-top)) / 2 - 0.044em);
   }
 
   .carousel {
