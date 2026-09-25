@@ -4,6 +4,12 @@
   overflow: hidden;
 }
 
+/* The page never scrolls or rubber-bands as a whole (iOS Safari would otherwise
+   let a swipe push it up, header and all). */
+:global(html):has(.page) {
+  overscroll-behavior: none;
+}
+
 .page {
   /* Poster strip (PosterCarousel.tsx) sizes; overridden per screen size below. */
   --thumb-width: 60px;
@@ -17,6 +23,8 @@
   display: flex;
   flex-direction: column;
   cursor: none;
+  /* Sideways swipes (strip, credits) and pinch-zoom only; no vertical page panning. */
+  touch-action: pan-x pinch-zoom;
 }
 
 /* Header: FPS Archive · “Title” Year · About */
@@ -46,8 +54,10 @@
 }
 
 /* The giant “23FPS” behind the posters */
+/* Fixed, not absolute: it's 100vh tall, which in iOS Safari is taller than the
+   visible page (100dvh) and would otherwise make the whole page scrollable. */
 .hoverContainer {
-  position: absolute;
+  position: fixed;
   left: 0;
   width: 100vw;
   height: 100vh;
