@@ -1,0 +1,11 @@
+/* Background lives on body only, so it propagates to the canvas. */
+body {
+  margin: 0 8px;
+  background: #000;
+  color: #fff;
+}
+
+::selection {
+  color: #000;
+  background: #fff;
+}

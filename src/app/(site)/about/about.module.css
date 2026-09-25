@@ -1,0 +1,71 @@
+/* Ported from legacy/style_contact.css. The old page rendered entirely in the
+   bold cut (a duplicate @font-face overrode the regular one), so bold it stays. */
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-bold);
+  font-size: 10pt;
+}
+
+.page a {
+  color: #fff;
+}
+
+.information {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  line-height: 16pt;
+}
+
+.information a {
+  text-decoration: none;
+}
+
+.text {
+  line-height: 14pt;
+  letter-spacing: 0.2px;
+  text-align: justify;
+  text-align-last: center;
+}
+
+.text p {
+  display: inline;
+  margin: 0;
+}
+
+/* The old page ran its paragraphs together into one justified block; keep that look. */
+.text p + p::before {
+  content: ' ';
+}
+
+.colophon {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 8px;
+  line-height: 14pt;
+  letter-spacing: 0.2px;
+  text-align: center;
+}
+
+/* Paragraph margins kept: the old credit line sat 8px + 1em above the bottom edge. */
+.colophon p {
+  margin: 1em 0;
+}
+
+@media (max-width: 1000px) {
+  .text {
+    padding-bottom: 88px;
+    letter-spacing: 0.5px;
+    text-align: left;
+    text-align-last: left;
+  }
+
+  .colophon {
+    padding-left: 10px;
+    text-align: left;
+  }
+}

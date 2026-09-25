@@ -1,0 +1,253 @@
+/* Ported from legacy/style.css — sizes and ratios are intentionally kept as-is. */
+
+:global(body):has(.page) {
+  overflow: hidden;
+}
+
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  cursor: none;
+}
+
+/* Header: FPS Archive · “Title” Year · About */
+.information {
+  position: relative;
+  z-index: 999;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-bold);
+  font-size: 10pt;
+  line-height: 16pt;
+}
+
+.information a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.title {
+  min-width: 0;
+  padding: 0 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The giant “23FPS” behind the posters */
+.hoverContainer {
+  position: absolute;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  text-align: center;
+  pointer-events: none;
+}
+
+.counter {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  margin-right: 18px;
+  font-family: var(--font-condensed);
+  font-size: calc(100vw / 2.38);
+  line-height: 100vh;
+  letter-spacing: -20px;
+  white-space: nowrap;
+  text-align: center;
+  transform: translateY(-11%);
+  transition: all 300ms ease-in-out;
+}
+
+/* Poster columns */
+.container {
+  flex: 15;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.column {
+  position: relative;
+  z-index: 9;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  margin-right: 24px;
+  transition: flex 360ms ease-out;
+}
+
+.column:last-child {
+  margin-right: 0;
+}
+
+.column:hover {
+  flex: 3;
+}
+
+.trigger {
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.trigger img {
+  width: 100%;
+  height: auto;
+  align-self: flex-end;
+  object-fit: contain;
+}
+
+/* Credits along the bottom */
+.credits {
+  position: relative;
+  z-index: 999;
+  flex: 0.7;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.creditRow {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  white-space: nowrap;
+  font-size: 10pt;
+  line-height: 20pt;
+}
+
+.name {
+  display: inline-block;
+  font-family: var(--font-bold);
+  font-size: 10pt;
+  line-height: 16pt;
+}
+
+.name a {
+  color: #fff;
+}
+
+.role {
+  font-family: var(--font-regular);
+}
+
+@media screen and (min-width: 2239px) and (max-width: 2800px) {
+  .counter {
+    letter-spacing: -40px;
+  }
+  .credits {
+    flex: 0.4;
+  }
+  .column {
+    margin-right: 36px;
+  }
+}
+
+@media screen and (min-width: 2801px) and (max-width: 3699px) {
+  .counter {
+    letter-spacing: -56px;
+    transform: translateY(-6%);
+  }
+  .credits {
+    flex: 0.25;
+  }
+  .column {
+    margin-right: 50px;
+  }
+}
+
+/* Mobile: tap the counter, then swipe through one poster at a time */
+@media screen and (max-width: 800px) {
+  .information,
+  .name {
+    font-size: 11.5px;
+  }
+
+  .title {
+    letter-spacing: -0.2px;
+  }
+
+  .hoverContainer {
+    pointer-events: auto;
+  }
+
+  .counter {
+    bottom: 0;
+    letter-spacing: -10px;
+    transform: translateY(-4%);
+  }
+
+  .container {
+    flex: 1;
+    min-height: 0;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    transform: translateX(100vw);
+    transition: transform 0.5s ease;
+  }
+
+  .container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .container[data-open='true'] {
+    transform: none;
+  }
+
+  .column,
+  .column:hover {
+    /* Beats the inline flex set by desktop hover, e.g. after resizing the window. */
+    flex: 0 0 100% !important;
+    margin-right: 0;
+    scroll-snap-align: start;
+    transition: none;
+  }
+
+  .trigger {
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .trigger img {
+    width: 93%;
+    max-height: 100%;
+    align-self: flex-start;
+    object-position: left top;
+  }
+
+  .credits {
+    flex: 0.3;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .creditRow {
+    justify-content: flex-start;
+    font-size: 11.5px;
+  }
+
+  .name {
+    margin-right: 20px;
+  }
+}
