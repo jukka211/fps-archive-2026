@@ -9,7 +9,7 @@ export const structure: StructureResolver = (S, context) =>
     .items([
       orderableDocumentListDeskItem({
         type: 'poster',
-        title: 'Posters (drag to reorder)',
+        title: 'Project-Posters',
         icon: ImageIcon,
         S,
         context,

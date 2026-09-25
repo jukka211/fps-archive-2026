@@ -10,7 +10,7 @@ Next.js 16 site with Sanity for content, deployed on Vercel.
 
 Open `/studio` on the live site (or `http://localhost:3000/studio` locally).
 
-- **Posters (drag to reorder)**: film title, year, poster image (WebP/JPG/PNG or animated GIF) and credits. The order here is the order on the site; the counter shows the number of posters (`23FPS`).
+- **Project-Posters**: film title, year, poster image (WebP/JPG/PNG or animated GIF) and credits. Drag posters to reorder them; the order here is the order on the site; the counter shows the number of posters (`23FPS`).
 - **About**: the text and the credit line at the bottom.
 
 Published changes go live without a redeploy. When you publish in `/studio`, the Studio tells the site to refresh its cached pages; the first visitor after an edit may still get the previous version, and the next one gets the new version.
@@ -38,7 +38,7 @@ npx sanity cors add https://your-domain.com --credentials
 
 | Path | What |
 | --- | --- |
-| `src/components/Archive.tsx` | Home page: poster columns, hover/zoom, FPS counter, mobile gallery |
+| `src/components/Archive.tsx` | Home page: poster columns, hover/zoom, FPS counter, mobile thumbnail strip |
 | `src/components/Archive.module.css` | Its styles, ported from the original `style.css` |
 | `src/app/(site)/about/` | About page |
 | `src/app/(studio)/studio/` | Embedded Sanity Studio |

@@ -66,9 +66,18 @@
   transition: all 300ms ease-in-out;
 }
 
-/* Poster columns */
+/* Fades back while a poster is zoomed. */
+.counter[data-dimmed='true'] {
+  opacity: 0.3;
+}
+
+/* Poster columns. A size container, so a zoomed column can use 100cqh
+   (this box's height) to fill the space between header and credits. */
 .container {
-  flex: 15;
+  position: relative;
+  z-index: 9;
+  container-type: size;
+  flex: 16;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -92,8 +101,17 @@
   margin-right: 0;
 }
 
-.column:hover {
+/* Hovered (or last hovered) poster expands. */
+.column:hover,
+.column[data-active='true'] {
   flex: 3;
+}
+
+/* Clicked poster: as wide as it needs to be to fill the container's full height
+   (100cqh × its width/height ratio). No grow, so it's never cropped; it may
+   shrink when the window is too narrow. */
+.column[data-zoomed='true'] {
+  flex: 0 1 calc(100cqh * var(--ratio));
 }
 
 .trigger {
@@ -115,7 +133,7 @@
 .credits {
   position: relative;
   z-index: 999;
-  flex: 0.7;
+  flex: 0.4;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -128,7 +146,7 @@
   justify-content: space-between;
   white-space: nowrap;
   font-size: 10pt;
-  line-height: 20pt;
+  line-height: 10pt;
 }
 
 .name {
@@ -171,8 +189,14 @@
   }
 }
 
-/* Mobile: tap the counter, then swipe through one poster at a time */
+/* Mobile: the same layout as desktop, with the posters as a strip of thumbnails
+   that scrolls sideways. Tap a thumbnail to enlarge it, tap again to shrink it. */
 @media screen and (max-width: 800px) {
+  .page {
+    --thumb-width: 32px;
+    --thumb-gap: 8px;
+  }
+
   .information,
   .name {
     font-size: 11.5px;
@@ -182,10 +206,6 @@
     letter-spacing: -0.2px;
   }
 
-  .hoverContainer {
-    pointer-events: auto;
-  }
-
   .counter {
     bottom: 0;
     letter-spacing: -10px;
@@ -193,53 +213,46 @@
   }
 
   .container {
-    flex: 1;
     min-height: 0;
     justify-content: flex-start;
     overflow-x: auto;
-    overflow-y: hidden;
     overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    transform: translateX(100vw);
-    transition: transform 0.5s ease;
   }
 
   .container::-webkit-scrollbar {
     display: none;
   }
 
-  .container[data-open='true'] {
-    transform: none;
+  .column {
+    margin-right: var(--thumb-gap);
+  }
+
+  .column:last-child {
+    margin-right: 0;
   }
 
   .column,
-  .column:hover {
-    /* Beats the inline flex set by desktop hover, e.g. after resizing the window. */
-    flex: 0 0 100% !important;
-    margin-right: 0;
-    scroll-snap-align: start;
-    transition: none;
+  .column:hover,
+  .column[data-active='true'] {
+    flex: 0 0 var(--thumb-width);
   }
 
-  .trigger {
-    justify-content: flex-start;
-    align-items: flex-start;
-  }
-
-  .trigger img {
-    width: 93%;
-    max-height: 100%;
-    align-self: flex-start;
-    object-position: left top;
+  /* Full height, but never wider than the screen. */
+  .column[data-zoomed='true'] {
+    flex: 0 0 min(calc(100cqh * var(--ratio)), 100cqw);
   }
 
   .credits {
-    flex: 0.3;
+    flex: 0 0 auto;
+    padding: 6px 0;
     justify-content: flex-start;
-    align-items: flex-start;
     overflow-x: auto;
     scrollbar-width: none;
+  }
+
+  .credits::-webkit-scrollbar {
+    display: none;
   }
 
   .creditRow {

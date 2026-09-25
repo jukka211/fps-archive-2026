@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useState, type CSSProperties} from 'react'
 
 import type {Poster} from '@/sanity/queries'
 
@@ -17,15 +17,12 @@ export function Archive({posters}: {posters: Poster[]}) {
 
   // Counts 0 → total at `total` frames per second on load, e.g. 0FPS … 23FPS.
   const [count, setCount] = useState(0)
-  // Poster under the pointer: the big counter shows its number, e.g. 05FPS.
+  // Poster under the pointer (or last tapped): the big counter shows its number, e.g. 05FPS.
   const [hovered, setHovered] = useState<number | null>(null)
-  // Last poster hovered (desktop) or swiped to (mobile): stays expanded and shows its title and credits.
+  // Last poster hovered or tapped: stays expanded and shows its title and credits.
   const [active, setActive] = useState<number | null>(null)
-  // Poster clicked to fill the screen height; resets when the pointer leaves it.
-  const [zoom, setZoom] = useState<{index: number; flex: string} | null>(null)
-  // Mobile: the gallery slides in on the first tap.
-  const [open, setOpen] = useState(false)
-  const galleryRef = useRef<HTMLDivElement>(null)
+  // Poster clicked or tapped to fill the available height; resets when the pointer leaves it.
+  const [zoomed, setZoomed] = useState<number | null>(null)
 
   useEffect(() => {
     if (total === 0) return
@@ -48,32 +45,16 @@ export function Archive({posters}: {posters: Poster[]}) {
 
   function leave(index: number) {
     setHovered((h) => (h === index ? null : h))
-    setZoom((z) => (z?.index === index ? null : z))
+    setZoomed((z) => (z === index ? null : z))
   }
 
   function toggleZoom(index: number) {
-    if (!isDesktop()) return
-    // A ~1:√2 poster at this width fills the column height.
-    const basis = Math.round(window.innerHeight / 1.59)
-    setZoom((z) => (z?.index === index ? null : {index, flex: `1 1 ${basis}px`}))
-  }
-
-  function openGallery() {
-    if (open || isDesktop()) return
-    setOpen(true)
-    setActive(0)
-  }
-
-  function onGalleryScroll() {
-    const el = galleryRef.current
-    if (!el || !open || isDesktop()) return
-    setActive(Math.min(total - 1, Math.round(el.scrollLeft / el.clientWidth)))
-  }
-
-  function flexFor(index: number) {
-    if (zoom?.index === index) return zoom.flex
-    if (active === null) return undefined
-    return active === index ? 3 : 1
+    if (!isDesktop()) {
+      // Touch screens have no hover, so the tap also selects the poster.
+      setHovered(index)
+      setActive(index)
+    }
+    setZoomed((z) => (z === index ? null : index))
   }
 
   const current = active !== null ? posters[active] : undefined
@@ -89,21 +70,20 @@ export function Archive({posters}: {posters: Poster[]}) {
         <Link href="/about">About</Link>
       </header>
 
-      <div className={styles.hoverContainer} onClick={openGallery} aria-hidden>
-        <div className={styles.counter}>{counter}FPS</div>
+      <div className={styles.hoverContainer} aria-hidden>
+        <div className={styles.counter} data-dimmed={zoomed !== null}>
+          {counter}FPS
+        </div>
       </div>
 
-      <div
-        ref={galleryRef}
-        className={styles.container}
-        data-open={open}
-        onScroll={onGalleryScroll}
-      >
+      <div className={styles.container}>
         {posters.map((poster, index) => (
           <div
             key={poster._id}
             className={styles.column}
-            style={{flex: flexFor(index)}}
+            style={{'--ratio': poster.image.width / poster.image.height} as CSSProperties}
+            data-active={active === index}
+            data-zoomed={zoomed === index}
             onMouseEnter={() => enter(index)}
             onMouseLeave={() => leave(index)}
             onClick={() => toggleZoom(index)}
@@ -113,6 +93,13 @@ export function Archive({posters}: {posters: Poster[]}) {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault()
                 toggleZoom(index)
+              }
+            }}
+            onTransitionEnd={(e) => {
+              // Mobile: once a tapped poster has grown, scroll the strip so it's fully visible.
+              if (e.target !== e.currentTarget || e.propertyName !== 'flex-basis') return
+              if (zoomed === index && !isDesktop()) {
+                e.currentTarget.scrollIntoView({behavior: 'smooth', inline: 'center', block: 'nearest'})
               }
             }}
             tabIndex={0}
