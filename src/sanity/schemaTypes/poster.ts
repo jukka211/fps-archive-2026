@@ -3,6 +3,8 @@ import {ImageIcon} from '@sanity/icons/Image'
 import {UserIcon} from '@sanity/icons/User'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 
+import {slugify} from '../slugify'
+
 export const poster = defineType({
   name: 'poster',
   title: 'Poster',
@@ -16,6 +18,15 @@ export const poster = defineType({
       title: 'Film title',
       description: 'Shown in quotes in the header, e.g. “Echo” 2023.',
       type: 'string',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'slug',
+      title: 'Page URL',
+      description:
+        'Address of the project page, e.g. “echo” → /projects/echo. Click “Generate” to create it from the title; must be unique.',
+      type: 'slug',
+      options: {source: 'title', slugify},
       validation: (rule) => rule.required(),
     }),
     defineField({

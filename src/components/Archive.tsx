@@ -1,10 +1,10 @@
 'use client'
 
-import Link from 'next/link'
 import {useEffect, useState} from 'react'
 
 import type {Poster} from '@/sanity/queries'
 
+import {Information} from './Information'
 import {PosterCarousel} from './PosterCarousel'
 import styles from './Archive.module.css'
 
@@ -35,13 +35,7 @@ export function Archive({posters}: {posters: Poster[]}) {
 
   return (
     <div className={styles.page}>
-      <header className={styles.information}>
-        <Link href="/">FPS Archive</Link>
-        <span className={styles.title}>
-          {current?.title ? `“${current.title}”${current.year ? ` ${current.year}` : ''}` : null}
-        </span>
-        <Link href="/about">About</Link>
-      </header>
+      <Information title={current?.title} year={current?.year} />
 
       <div className={styles.hoverContainer} aria-hidden>
         <div className={styles.counter} data-dimmed={Boolean(selected?.large)}>

@@ -4,13 +4,15 @@
  *
  *   npm run import-legacy                  # skips documents that already exist
  *   npm run import-legacy -- --replace     # overwrites them (loses Studio edits!)
- *   node scripts/import-legacy.ts --dry-run  # prints what would be imported, no Sanity needed
+ *   npm run import-legacy -- --dry-run     # prints what would be imported
  */
 import {createReadStream, readFileSync} from 'node:fs'
 import path from 'node:path'
 import {randomUUID} from 'node:crypto'
 
 import {LexoRank} from 'lexorank'
+
+import {slugify} from '../src/sanity/slugify'
 
 const LEGACY_DIR = path.join(process.cwd(), 'legacy')
 const PLACEHOLDER_NAME = 'Vorname Nachname'
@@ -136,9 +138,19 @@ async function main() {
   const write = <T extends {_id: string; _type: string}>(doc: T) =>
     replace ? client.createOrReplace(doc) : client.createIfNotExists(doc)
 
+  // Page URLs: the title, plus -2, -3 … for posters of the same film.
+  const slugCount = new Map<string, number>()
+  const uniqueSlug = (title: string) => {
+    const base = slugify(title)
+    const n = (slugCount.get(base) ?? 0) + 1
+    slugCount.set(base, n)
+    return n === 1 ? base : `${base}-${n}`
+  }
+
   let rank = LexoRank.min()
   for (const poster of posters) {
     rank = rank.genNext().genNext()
+    const slug = uniqueSlug(poster.title)
     const _id = `poster-${poster.id}`
     if (existing.has(_id) && !replace) {
       console.log(`  skip   ${_id} (exists)`)
@@ -154,6 +166,7 @@ async function main() {
       _type: 'poster',
       orderRank: rank.toString(),
       title: poster.title,
+      slug: {_type: 'slug', current: slug},
       ...(poster.year ? {year: poster.year} : {}),
       image: {_type: 'image', asset: {_type: 'reference', _ref: asset._id}},
       credits: poster.credits.map((c) => ({_type: 'credit', _key: key(), ...c})),

@@ -1,6 +1,7 @@
 'use client'
 
 import {motion} from 'motion/react'
+import Link from 'next/link'
 import {useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
 
 import type {Poster} from '@/sanity/queries'
@@ -21,7 +22,8 @@ const mod = (n: number, total: number) => ((n % total) + total) % total
  * The poster strip, on desktop and mobile. Scrolling (swipe, mouse wheel,
  * trackpad or ← →) moves through the posters one `--scroll-step` at a time.
  * Once scrolled or clicked, the poster in the centre is large and the rest are
- * thumbnails, all animated with a spring. The strip loops.
+ * thumbnails, all animated with a spring; the large one links to its project
+ * page. The strip loops.
  */
 export function PosterCarousel({
   posters,
@@ -107,6 +109,8 @@ export function PosterCarousel({
 
   function onClick(index: number, distance: number) {
     if (distance === 0) {
+      // Large and linked: the link on top of it opens the project page.
+      if (large && posters[index].slug) return
       setLarge(!large)
       onChange(index, !large)
     } else if (metrics) {
@@ -155,6 +159,13 @@ export function PosterCarousel({
             data-distance={distance}
           >
             <PosterImage poster={poster} />
+            {distance === 0 && large && poster.slug ? (
+              <Link
+                href={`/projects/${poster.slug}`}
+                className={styles.carouselLink}
+                aria-label={`Open “${poster.title}”`}
+              />
+            ) : null}
           </motion.div>
         ))}
       </div>

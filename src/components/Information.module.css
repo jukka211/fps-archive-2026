@@ -1,0 +1,35 @@
+/* Top bar: FPS Archive · “Title” Year · About */
+.information {
+  position: relative;
+  z-index: 999;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-bold);
+  font-size: 10pt;
+  line-height: 16pt;
+}
+
+.information a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.title {
+  min-width: 0;
+  padding: 0 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media screen and (max-width: 800px) {
+  .information {
+    font-size: 11.5px;
+  }
+
+  .title {
+    letter-spacing: -0.2px;
+  }
+}
