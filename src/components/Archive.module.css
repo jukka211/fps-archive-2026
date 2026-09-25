@@ -255,3 +255,12 @@
     margin-right: 20px;
   }
 }
+
+/* Small phones (iPhone 6/7/8/SE and the like): a smaller counter, as there's
+   less room above the posters. By screen height, which unlike the viewport's
+   doesn't shrink under the browser's toolbars. */
+@media screen and (max-width: 800px) and (max-device-height: 700px) {
+  .counter {
+    font-size: calc(100vw / 2.8);
+  }
+}
