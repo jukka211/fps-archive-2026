@@ -53,7 +53,9 @@ export function Archive({posters}: {posters: Poster[]}) {
 
       <div className={styles.hoverContainer} aria-hidden>
         <div className={styles.counter} data-dimmed={Boolean(selected?.large)} data-raised={raised}>
-          {counter}FPS
+          {/* Two parts, so phones can push them to either side. */}
+          <span>{counter}</span>
+          <span>FPS</span>
         </div>
       </div>
 
