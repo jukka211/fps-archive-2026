@@ -2,9 +2,9 @@ import type {Metadata} from 'next'
 import Link from 'next/link'
 import {PortableText, type PortableTextComponents} from 'next-sanity'
 
-import {AboutCounter} from '@/components/AboutCounter'
+import {PosterStrip} from '@/components/PosterStrip'
 import {sanityFetch} from '@/sanity/live'
-import {ABOUT_QUERY, POSTER_COUNT_QUERY, type About} from '@/sanity/queries'
+import {ABOUT_QUERY, POSTERS_QUERY, type About, type Poster} from '@/sanity/queries'
 
 import styles from './about.module.css'
 
@@ -19,9 +19,9 @@ const components: PortableTextComponents = {
 }
 
 export default async function AboutPage() {
-  const [{data}, {data: posterCount}] = await Promise.all([
+  const [{data}, {data: posters}] = await Promise.all([
     sanityFetch({query: ABOUT_QUERY}),
-    sanityFetch({query: POSTER_COUNT_QUERY}),
+    sanityFetch({query: POSTERS_QUERY}),
   ])
   const about = data as About
 
@@ -31,10 +31,10 @@ export default async function AboutPage() {
         <Link href="/">FPS Archive</Link>
         <Link href="/" className={styles.close}>Close</Link>
       </header>
-      <AboutCounter total={(posterCount as number | null) ?? 0} />
       <div className={styles.text}>
         {about?.body ? <PortableText value={about.body} components={components} /> : null}
       </div>
+      <PosterStrip posters={(posters ?? []) as Poster[]} />
     </div>
   )
 }

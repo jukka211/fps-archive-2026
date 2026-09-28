@@ -1,11 +1,6 @@
 /* Ported from legacy/style_contact.css. The old page rendered entirely in the
    bold cut (a duplicate @font-face overrode the regular one), so bold it stays. */
 
-/* Swipes step the counter (AboutCounter.tsx); the page mustn't rubber-band along. */
-:global(html):has(.page) {
-  overscroll-behavior: none;
-}
-
 .page {
   min-height: 100vh;
   /* The visible height: on phones, excludes the browser's toolbars, so the text
@@ -39,11 +34,12 @@
   text-transform: uppercase;
 }
 
-/* At the bottom of the page. */
+/* Right under the top bar; the poster strip is pushed to the bottom. */
 .text {
-  margin-top: auto;
-  /* With the page's 8px margins: 10px from the screen edges. */
-  padding: 0 2px;
+  margin-bottom: auto;
+  /* Sides: with the page's 8px margins, 10px from the screen edges. Bottom:
+     kept clear of the strip on short screens. */
+  padding: 0 2px 24px;
   font-family: var(--font-regular);
   column-count: 2;
   column-gap: 12px;

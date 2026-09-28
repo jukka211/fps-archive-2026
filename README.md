@@ -39,14 +39,14 @@ npx sanity cors add https://your-domain.com --credentials
 | Path | What |
 | --- | --- |
 | `src/components/Archive.tsx` | Home page: header, FPS counter, credits |
-| `src/components/Counter.tsx` | The big “23FPS” counter on the home and About pages; `AboutCounter.tsx` steps it 00 → 23 as you scroll on About |
+| `src/components/Counter.tsx` | The big “23FPS” counter on the home page (`AboutCounter.tsx`, its scroll-driven About-page variant, is currently unused) |
 | `src/components/PosterCarousel.tsx` | The looping poster strip: scroll/click to enlarge the centre poster, click it again to open its project page |
 | `src/components/Cursor.tsx` | The mouse pointer as a word: Scroll / View More / Close (not on touch screens) |
 | `src/components/Information.tsx` | Top bar: FPS Archive · “Title” Year · Index, About |
 | `src/app/(site)/projects/page.tsx` | Index page (for now only the top bar) |
 | `src/app/(site)/projects/[slug]/` | Project page (for now only the top bar) |
 | `src/components/Archive.module.css` | Styles for both, incl. strip sizes per screen width (`--thumb-width`, `--thumb-gap`, `--scroll-step`) |
-| `src/app/(site)/about/` | About page |
+| `src/app/(site)/about/` | About page: text under the top bar, still poster thumbnails along the bottom (`src/components/PosterStrip.tsx`) |
 | `src/app/(studio)/studio/` | Embedded Sanity Studio |
 | `src/sanity/schemaTypes/` | Content model (`poster`, `about`) |
 | `src/sanity/queries.ts` | GROQ queries and their types |
