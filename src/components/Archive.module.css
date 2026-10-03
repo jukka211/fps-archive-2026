@@ -40,6 +40,10 @@
   .page a:not([data-cursor]) {
     cursor: pointer;
   }
+
+  .page [data-cursor=''] {
+    cursor: default;
+  }
 }
 
 /* Credits along the bottom */

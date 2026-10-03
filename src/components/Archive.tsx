@@ -17,7 +17,8 @@ const MAX_CREDITS = 3
 export function Archive({posters}: {posters: Poster[]}) {
   const total = posters.length
 
-  // Counts 0 → total at `total` frames per second on load, e.g. 0FPS … 23FPS.
+  // Counts 0 → total at `total` frames per second on load, e.g. 0FPS … 23FPS,
+  // while the poster strip appears from left to right.
   const [count, setCount] = useState(0)
   // Poster in the centre of the strip once the visitor has scrolled or clicked:
   // its title and credits show, and its number replaces the count, e.g. 05FPS.
@@ -43,7 +44,12 @@ export function Archive({posters}: {posters: Poster[]}) {
 
       <Counter value={counter} dimmed={Boolean(selected?.large)} />
 
-      <PosterCarousel posters={posters} onChange={(index, large) => setSelected({index, large})} />
+      <PosterCarousel
+        posters={posters}
+        // All at once if the visitor scrolls or clicks before the count is up.
+        reveal={selected || total === 0 ? 1 : count / total}
+        onChange={(index, large) => setSelected({index, large})}
+      />
 
       <div className={styles.credits}>
         {current?.credits?.length ? (

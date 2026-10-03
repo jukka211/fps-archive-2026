@@ -29,6 +29,18 @@ export const PROJECT_QUERY = defineQuery(`
   *[_type == "poster" && slug.current == $slug][0]{title, year}
 `)
 
+// The Index page: one row of cells per poster, in the same order as the home page.
+export const INDEX_QUERY = defineQuery(`
+  *[_type == "poster" && defined(image.asset)] | order(orderRank asc) {
+    _id,
+    title,
+    year,
+    "slug": slug.current,
+    "designers": credits[role == "Poster Design"]{_key, role, name, url},
+    "directors": credits[role == "Director"]{_key, role, name, url}
+  }
+`)
+
 export const ABOUT_QUERY = defineQuery(`
   *[_id == "about"][0]{body}
 `)
@@ -58,6 +70,15 @@ export type Project = {
   title: string | null
   year: number | null
 } | null
+
+export type IndexEntry = {
+  _id: string
+  title: string | null
+  year: number | null
+  slug: string | null
+  designers: Credit[] | null
+  directors: Credit[] | null
+}
 
 export type About = {
   body: PortableTextBlock[] | null

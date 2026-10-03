@@ -7,8 +7,9 @@ import styles from './Cursor.module.css'
 /**
  * The mouse pointer on the home page, as a word: “Scroll”, and once a poster is
  * large, “Close”, or whatever the element under the pointer asks for with a
- * `data-cursor` attribute (“View More” on the large poster). Over other links
- * the normal pointer shows instead. Mouse only: nothing on touch screens.
+ * `data-cursor` attribute (“View More” on the large poster). Over other links,
+ * and where `data-cursor` is empty, the normal pointer shows instead. Mouse
+ * only: nothing on touch screens.
  */
 export function Cursor({large}: {large: boolean}) {
   const ref = useRef<HTMLDivElement>(null)
@@ -45,7 +46,7 @@ export function Cursor({large}: {large: boolean}) {
   }, [])
 
   return (
-    <div ref={ref} className={styles.cursor} data-hidden={!visible || overLink} aria-hidden>
+    <div ref={ref} className={styles.cursor} data-hidden={!visible || overLink || hint === ''} aria-hidden>
       {large ? (hint ?? 'Close') : 'Scroll'}
     </div>
   )

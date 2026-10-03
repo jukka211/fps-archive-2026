@@ -23,7 +23,6 @@ export function Counter({value, dimmed}: {value: string; dimmed: boolean}) {
   return (
     <div className={styles.layer} aria-hidden>
       <div className={styles.counter} data-dimmed={dimmed} data-raised={raised}>
-        {/* Two parts, so phones can push them to either side. */}
         <span>{value}</span>
         <span>FPS</span>
       </div>

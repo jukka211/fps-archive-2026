@@ -40,7 +40,6 @@
   /* Sides: with the page's 8px margins, 10px from the screen edges. Bottom:
      kept clear of the strip on short screens. */
   padding: 0 2px 24px;
-  font-family: var(--font-regular);
   column-count: 2;
   column-gap: 12px;
   line-height: 12pt;
@@ -59,5 +58,12 @@
 @media (max-width: 1000px) {
   .text {
     letter-spacing: 0.5px;
+  }
+}
+
+/* Phones: one column. */
+@media screen and (max-width: 800px) {
+  .text {
+    column-count: 1;
   }
 }

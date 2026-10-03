@@ -52,31 +52,25 @@
 
 @media screen and (max-width: 800px) {
   /* A little above the middle of the screen, until the first touch or scroll.
-     Across the page: the number at the left margin, “FPS” at the right. */
+     As wide as the page margins allow: the letters span 2.23em at this
+     letter-spacing (the digits are all the same width). */
   .counter {
     top: 46%;
-    left: 8px;
-    right: 8px;
+    left: 0;
+    right: 0;
     width: auto;
     height: auto;
     margin: 0;
-    display: grid;
+    font-size: calc((100vw - 16px) / 2.23);
     line-height: 1;
-    letter-spacing: -10px;
+    letter-spacing: -0.055em;
     transform: translateY(-50%);
   }
 
-  /* Both in the same cell, so on wider screens they can close up rather than
-     push “FPS” past the margin. */
-  .counter span {
-    grid-area: 1 / 1;
-    justify-self: start;
-  }
-
+  /* Letter-spacing follows the last letter too; undo most of it so the letters
+     (not their boxes, the S has a wider side than the 2) are centred. */
   .counter span:last-child {
-    justify-self: end;
-    /* Letter-spacing follows the last letter too; undo it so the S ends at the margin. */
-    margin-right: 10px;
+    margin-right: 0.033em;
   }
 
   /* Then halfway between the top bar (16pt) and the top of a large poster: as
@@ -94,11 +88,11 @@
   }
 }
 
-/* Small phones (iPhone 6/7/8/SE and the like): a smaller counter, as there's
-   less room above the posters. By screen height, which unlike the viewport's
-   doesn't shrink under the browser's toolbars. */
-@media screen and (max-width: 800px) and (max-device-height: 700px) {
-  .counter {
-    font-size: calc(100vw / 2.8);
+/* Small phones (iPhone 6/7/8/SE: 667px): no room for it above the posters, so
+   instead of moving up it fades out. By screen height, which unlike the
+   viewport's doesn't shrink under the browser's toolbars. */
+@media screen and (max-width: 800px) and (max-device-height: 694px) {
+  .counter[data-raised='true'] {
+    opacity: 0;
   }
 }

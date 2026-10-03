@@ -16,6 +16,10 @@
   width: var(--thumb-width);
 }
 
+.dim {
+  opacity: 0.2;
+}
+
 .thumb img {
   display: block;
   width: 100%;
