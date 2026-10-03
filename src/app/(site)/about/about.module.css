@@ -27,7 +27,8 @@
   padding: 0 2px 24px;
   column-count: 2;
   column-gap: 12px;
-  line-height: 12pt;
+  /* Text sizes as on the Index page. */
+  line-height: 11pt;
 }
 
 .text p {
@@ -40,15 +41,10 @@
   content: ' ';
 }
 
-@media (max-width: 1000px) {
-  .text {
-    letter-spacing: 0.5px;
-  }
-}
-
 /* Phones: one column. */
 @media screen and (max-width: 800px) {
   .text {
     column-count: 1;
+    font-size: 11.5px;
   }
 }
