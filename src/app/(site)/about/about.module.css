@@ -19,21 +19,6 @@
   color: #fff;
 }
 
-.information {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  line-height: 16pt;
-}
-
-.information a {
-  text-decoration: none;
-}
-
-.close {
-  text-transform: uppercase;
-}
-
 /* Right under the top bar; the poster strip is pushed to the bottom. */
 .text {
   margin-bottom: auto;

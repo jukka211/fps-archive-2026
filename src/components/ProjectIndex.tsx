@@ -9,11 +9,13 @@ import {Information} from './Information'
 import {PosterStrip} from './PosterStrip'
 import styles from './ProjectIndex.module.css'
 
-/** Names for one role, comma-separated; each linked when it has a URL. */
-function Names({credits}: {credits: Credit[] | null}) {
+/** One role, e.g. “D: Meike Wüstenberg”: names comma-separated, each linked when it has a URL. */
+function Names({label, credits}: {label: string; credits: Credit[] | null}) {
+  if (!credits?.length) return null
   return (
     <div>
-      {credits?.map((credit, i) => (
+      {label}:{' '}
+      {credits.map((credit, i) => (
         <span key={credit._key}>
           {i > 0 ? ', ' : null}
           {credit.url ? (
@@ -35,22 +37,30 @@ export function ProjectIndex({entries, posters}: {entries: IndexEntry[]; posters
     <div className={styles.page}>
       <Information />
       <div className={styles.grid}>
-        {entries.map((entry) => (
+        {entries.map((entry, i) => (
           <div
             key={entry._id}
             className={styles.cell}
             onMouseEnter={() => setHovered(entry._id)}
             onMouseLeave={() => setHovered((id) => (id === entry._id ? null : id))}
           >
-            <div className={styles.head}>
+            {/* Its frame: the number the home page's counter shows for it. */}
+            <div>{String(i + 1).padStart(2, '0')}</div>
+            <div>
               <div>
-                {entry.slug ? <Link href={`/projects/${entry.slug}`}>{entry.title}</Link> : entry.title}
+                {entry.slug ? (
+                  <Link href={`/projects/${entry.slug}`} className={styles.title}>
+                    {entry.title}
+                  </Link>
+                ) : (
+                  entry.title
+                )}
               </div>
               <div>{entry.year}</div>
+              <br />
+              <Names label="D" credits={entry.directors} />
+              <Names label="GD" credits={entry.designers} />
             </div>
-            <br />
-            <Names credits={entry.designers} />
-            <Names credits={entry.directors} />
           </div>
         ))}
       </div>

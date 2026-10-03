@@ -1,4 +1,4 @@
-/* Top bar: FPS Archive · “Title” Year · Index, About */
+/* Top bar: FPS Archive · “Title” Year · Index, Info */
 .information {
   position: relative;
   z-index: 999;
@@ -26,6 +26,15 @@
 .nav {
   justify-self: end;
   white-space: nowrap;
+  color: #808080;
+}
+
+.information .nav a {
+  color: #808080;
+}
+
+.information .nav a.current {
+  color: #fff;
 }
 
 .nav,

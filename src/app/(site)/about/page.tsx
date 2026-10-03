@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
-import Link from 'next/link'
 import {PortableText, type PortableTextComponents} from 'next-sanity'
 
+import {Information} from '@/components/Information'
 import {PosterStrip} from '@/components/PosterStrip'
 import {sanityFetch} from '@/sanity/live'
 import {ABOUT_QUERY, POSTERS_QUERY, type About, type Poster} from '@/sanity/queries'
@@ -27,10 +27,7 @@ export default async function AboutPage() {
 
   return (
     <div className={styles.page}>
-      <header className={styles.information}>
-        <Link href="/">FPS Archive</Link>
-        <Link href="/" className={styles.close}>Close</Link>
-      </header>
+      <Information />
       <div className={styles.text}>
         {about?.body ? <PortableText value={about.body} components={components} /> : null}
       </div>
