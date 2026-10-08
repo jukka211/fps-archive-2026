@@ -7,10 +7,19 @@ import styles from './Counter.module.css'
 /**
  * The giant “23FPS” behind the home and About pages: `value`, then FPS. On
  * phones it sits a little above the middle of the screen until the first touch,
- * click, scroll or key press, then moves up out of the posters' way.
+ * click, scroll or key press, then moves up out of the posters' way. `raised`
+ * starts it up there, e.g. when the page opens on a large poster.
  */
-export function Counter({value, dimmed}: {value: string; dimmed: boolean}) {
-  const [raised, setRaised] = useState(false)
+export function Counter({
+  value,
+  dimmed,
+  raised: startRaised = false,
+}: {
+  value: string
+  dimmed: boolean
+  raised?: boolean
+}) {
+  const [raised, setRaised] = useState(startRaised)
 
   useEffect(() => {
     if (raised) return

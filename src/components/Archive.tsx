@@ -1,11 +1,11 @@
 'use client'
 
+import {useSearchParams} from 'next/navigation'
 import {useEffect, useState} from 'react'
 
 import type {Poster} from '@/sanity/queries'
 
 import {Counter} from './Counter'
-import {Cursor} from './Cursor'
 import {Information} from './Information'
 import {PosterCarousel} from './PosterCarousel'
 import styles from './Archive.module.css'
@@ -14,7 +14,20 @@ const pad = (n: number) => String(n).padStart(2, '0')
 // Credits shown along the bottom, from the top of the poster's list in the Studio.
 const MAX_CREDITS = 3
 
-export function Archive({posters}: {posters: Poster[]}) {
+/**
+ * The home page, opened on the poster in the address, if any: e.g. /?poster=echo
+ * from a thumbnail on the Info or Index page. The address is only read in the
+ * browser, so wrap this in <Suspense> with a plain <Archive> as the fallback,
+ * which is what gets prerendered.
+ */
+export function ArchiveFromUrl({posters}: {posters: Poster[]}) {
+  const slug = useSearchParams().get('poster')
+  const index = slug ? posters.findIndex((poster) => poster.slug === slug) : -1
+  return <Archive posters={posters} start={index >= 0 ? index : null} />
+}
+
+/** The home page. With `start`, it skips the intro and opens on that poster, large. */
+export function Archive({posters, start = null}: {posters: Poster[]; start?: number | null}) {
   const total = posters.length
 
   // Counts 0 → total at `total` frames per second on load, e.g. 0FPS … 23FPS,
@@ -22,10 +35,12 @@ export function Archive({posters}: {posters: Poster[]}) {
   const [count, setCount] = useState(0)
   // Poster in the centre of the strip once the visitor has scrolled or clicked:
   // its title and credits show, and its number replaces the count, e.g. 05FPS.
-  const [selected, setSelected] = useState<{index: number; large: boolean} | null>(null)
+  const [selected, setSelected] = useState<{index: number; large: boolean} | null>(
+    start === null ? null : {index: start, large: true},
+  )
 
   useEffect(() => {
-    if (total === 0) return
+    if (total === 0 || start !== null) return
     let n = 0
     const id = window.setInterval(() => {
       n += 1
@@ -33,7 +48,7 @@ export function Archive({posters}: {posters: Poster[]}) {
       if (n >= total) window.clearInterval(id)
     }, 1000 / total)
     return () => window.clearInterval(id)
-  }, [total])
+  }, [total, start])
 
   const current = selected ? posters[selected.index] : undefined
   const counter = selected ? pad(selected.index + 1) : String(count)
@@ -42,10 +57,11 @@ export function Archive({posters}: {posters: Poster[]}) {
     <div className={styles.page}>
       <Information title={current?.title} year={current?.year} />
 
-      <Counter value={counter} dimmed={Boolean(selected?.large)} />
+      <Counter value={counter} dimmed={Boolean(selected?.large)} raised={start !== null} />
 
       <PosterCarousel
         posters={posters}
+        start={start}
         // All at once if the visitor scrolls or clicks before the count is up.
         reveal={selected || total === 0 ? 1 : count / total}
         onChange={(index, large) => setSelected({index, large})}
@@ -63,8 +79,6 @@ export function Archive({posters}: {posters: Poster[]}) {
           </div>
         ) : null}
       </div>
-
-      <Cursor large={Boolean(selected?.large)} />
     </div>
   )
 }

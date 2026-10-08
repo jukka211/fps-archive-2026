@@ -29,23 +29,6 @@
   touch-action: pan-x pinch-zoom;
 }
 
-/* With a mouse, the pointer is a word (Cursor.tsx), except over the links in the
-   top bar and credits. */
-@media (hover: hover) and (pointer: fine) {
-  .page,
-  .page * {
-    cursor: none;
-  }
-
-  .page a:not([data-cursor]) {
-    cursor: pointer;
-  }
-
-  .page [data-cursor=''] {
-    cursor: default;
-  }
-}
-
 /* Credits along the bottom */
 .credits {
   position: relative;
@@ -124,6 +107,8 @@
   position: absolute;
   left: 0;
   bottom: 0;
+  /* A click makes it the large one, or shrinks the large one back. */
+  cursor: pointer;
 }
 
 .carouselCard img {
@@ -137,6 +122,11 @@
 .carouselLink {
   position: absolute;
   inset: 0;
+}
+
+/* In the link's place while there are no project pages. */
+.inert {
+  cursor: default;
 }
 
 @media screen and (min-width: 2239px) and (max-width: 2800px) {

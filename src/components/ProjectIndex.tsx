@@ -9,19 +9,36 @@ import {Information} from './Information'
 import {PosterStrip} from './PosterStrip'
 import styles from './ProjectIndex.module.css'
 
-/** One role, e.g. “D: Meike Wüstenberg”: names comma-separated, each linked when it has a URL. */
+/**
+ * Everyone in these credits, once each, in order, with their link if any. A
+ * name like “Felix Krisai & Pipi Fröstl” is two people; the credit's link goes
+ * to the first of them.
+ */
+function people(credits: Credit[] | null) {
+  const links = new Map<string, string | null>()
+  for (const credit of credits ?? []) {
+    credit.name?.split('&').forEach((part, i) => {
+      const name = part.trim()
+      if (name) links.set(name, links.get(name) || (i === 0 ? credit.url : null))
+    })
+  }
+  return [...links]
+}
+
+/** e.g. “Film: Thomas Marciano, Elahe Aman”: no roles, names comma-separated, each linked when it has a URL. */
 function Names({label, credits}: {label: string; credits: Credit[] | null}) {
-  if (!credits?.length) return null
+  const list = people(credits)
+  if (!list.length) return null
   return (
     <div>
       {label}:{' '}
-      {credits.map((credit, i) => (
-        <span key={credit._key}>
+      {list.map(([name, url], i) => (
+        <span key={name}>
           {i > 0 ? ', ' : null}
-          {credit.url ? (
-            <a href={credit.url} className={styles.person}>{credit.name}</a>
+          {url ? (
+            <a href={url} className={styles.person}>{name}</a>
           ) : (
-            credit.name
+            name
           )}
         </span>
       ))}
@@ -29,7 +46,10 @@ function Names({label, credits}: {label: string; credits: Credit[] | null}) {
   )
 }
 
-/** Index page: one project per cell, with the poster strip below lighting up the hovered one. */
+/**
+ * Index page: one project per cell, with the poster strip below. Hovering a
+ * cell lights up its poster in the strip; hovering a poster selects its cell.
+ */
 export function ProjectIndex({entries, posters}: {entries: IndexEntry[]; posters: Poster[]}) {
   const [hovered, setHovered] = useState<string | null>(null)
 
@@ -40,16 +60,17 @@ export function ProjectIndex({entries, posters}: {entries: IndexEntry[]; posters
         {entries.map((entry, i) => (
           <div
             key={entry._id}
-            className={styles.cell}
+            className={hovered === entry._id ? `${styles.cell} ${styles.selected}` : styles.cell}
             onMouseEnter={() => setHovered(entry._id)}
             onMouseLeave={() => setHovered((id) => (id === entry._id ? null : id))}
           >
             {/* Its frame: the number the home page's counter shows for it. */}
-            <div>{String(i + 1).padStart(2, '0')}</div>
+            <div>{String(i + 1).padStart(2, '0')}FPS</div>
             <div>
               <div>
                 {entry.slug ? (
-                  <Link href={`/projects/${entry.slug}`} className={styles.title}>
+                  // Opens the poster, large, on the home page, as the strip's thumbnails do.
+                  <Link href={{pathname: '/', query: {poster: entry.slug}}} className={styles.title}>
                     {entry.title}
                   </Link>
                 ) : (
@@ -58,13 +79,14 @@ export function ProjectIndex({entries, posters}: {entries: IndexEntry[]; posters
               </div>
               <div>{entry.year}</div>
               <br />
-              <Names label="D" credits={entry.directors} />
-              <Names label="GD" credits={entry.designers} />
+              <Names label="Graphic" credits={entry.designers} />
+              {entry.designers?.length && entry.crew?.length ? <br /> : null}
+              <Names label="Film" credits={entry.crew} />
             </div>
           </div>
         ))}
       </div>
-      <PosterStrip posters={posters} highlight={hovered} />
+      <PosterStrip posters={posters} highlight={hovered} onHover={setHovered} />
     </div>
   )
 }

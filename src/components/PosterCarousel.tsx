@@ -13,8 +13,8 @@ import styles from './Archive.module.css'
 // middle, so the strip loops and can be scrolled either way.
 const LOOP_CYCLES = 12
 const SPRING = {type: 'spring', stiffness: 210, damping: 26, mass: 0.9} as const
-// Off until the project pages have content: the large poster then neither
-// links anywhere nor shows “View More”.
+// Off until the project pages have content: the large poster doesn't link
+// anywhere yet.
 const LINK_PROJECTS = false
 
 type Metrics = {width: number; height: number; thumb: number; gap: number; step: number}
@@ -26,7 +26,8 @@ const mod = (n: number, total: number) => ((n % total) + total) % total
  * trackpad or ← →) moves through the posters one `--scroll-step` at a time.
  * Once scrolled or clicked, the poster in the centre is large and the rest are
  * thumbnails, all animated with a spring; the large one links to its project
- * page (once LINK_PROJECTS is on). The strip loops.
+ * page (once LINK_PROJECTS is on). The strip loops. With `start`, it opens on
+ * that poster, large.
  *
  * `reveal` (0–1) is for the intro: only the thumbnails whose centre lies within
  * that fraction of the width, from the left, are shown. They appear at once,
@@ -34,21 +35,23 @@ const mod = (n: number, total: number) => ((n % total) + total) % total
  */
 export function PosterCarousel({
   posters,
+  start = null,
   reveal = 1,
   onChange,
 }: {
   posters: Poster[]
+  start?: number | null
   reveal?: number
   onChange: (index: number, large: boolean) => void
 }) {
   const total = posters.length
   const totalSteps = total * LOOP_CYCLES
-  const startStep = Math.floor(LOOP_CYCLES / 2) * total
+  const startStep = Math.floor(LOOP_CYCLES / 2) * total + (start ?? 0)
   const scrollerRef = useRef<HTMLDivElement>(null)
   // Current step, readable from the event handlers and resize observer.
   const stepRef = useRef(startStep)
   const [step, setStep] = useState(startStep)
-  const [large, setLarge] = useState(false)
+  const [large, setLarge] = useState(start !== null)
   const [metrics, setMetrics] = useState<Metrics | null>(null)
 
   // Measure the strip and read the sizes from the CSS variables, which differ
@@ -192,11 +195,10 @@ export function PosterCarousel({
                   href={`/projects/${poster.slug}`}
                   className={styles.carouselLink}
                   aria-label={`Open “${poster.title}”`}
-                  data-cursor="View More"
                 />
               ) : (
-                // In the link's place: no word, just the normal pointer.
-                <div className={styles.carouselLink} data-cursor="" />
+                // In the link's place: nothing to click, so the normal pointer.
+                <div className={`${styles.carouselLink} ${styles.inert}`} />
               )
             ) : null}
           </motion.div>

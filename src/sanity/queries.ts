@@ -30,6 +30,7 @@ export const PROJECT_QUERY = defineQuery(`
 `)
 
 // The Index page: one row of cells per poster, in the same order as the home page.
+// The poster's designers, and everyone else in the credits: the film's crew.
 export const INDEX_QUERY = defineQuery(`
   *[_type == "poster" && defined(image.asset)] | order(orderRank asc) {
     _id,
@@ -37,7 +38,7 @@ export const INDEX_QUERY = defineQuery(`
     year,
     "slug": slug.current,
     "designers": credits[role == "Poster Design"]{_key, role, name, url},
-    "directors": credits[role == "Director"]{_key, role, name, url}
+    "crew": credits[role != "Poster Design"]{_key, role, name, url}
   }
 `)
 
@@ -77,7 +78,7 @@ export type IndexEntry = {
   year: number | null
   slug: string | null
   designers: Credit[] | null
-  directors: Credit[] | null
+  crew: Credit[] | null
 }
 
 export type About = {

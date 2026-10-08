@@ -9,8 +9,8 @@
   flex-direction: column;
 }
 
-/* Index: one project per cell — its number at the top; film, year, director and
-   poster design at the bottom. Four rows
+/* Index: one project per cell — its number at the top; film, year, poster
+   designers and film crew at the bottom. Four rows
    share the height under the top bar; projects past 24 add rows below. */
 .grid {
   flex: 1;
@@ -18,7 +18,7 @@
   grid-template-columns: repeat(6, minmax(0, 1fr));
   grid-template-rows: repeat(4, 1fr);
   /* No gap between columns: the space is padding inside the cells instead, so
-     the hover frame has room around the text. */
+     hovering or clicking there still counts as the cell. */
   gap: 12pt 0;
   /* As the About text: with the page's 8px margins, 10px from the screen edges. */
   padding: 0 2px 10px;
@@ -38,7 +38,7 @@
 }
 
 /* The title's link covers the whole cell, so a click anywhere in it opens the
-   project page; the linked names sit above it and open their own. */
+   poster on the home page; the linked names sit above it and open their own. */
 .title::after {
   content: '';
   position: absolute;
@@ -50,24 +50,19 @@
   text-decoration: none;
 }
 
-/* Designer and director names that link somewhere. */
+/* Names that link somewhere. */
 .grid .person {
   position: relative;
   z-index: 1;
   text-decoration: underline;
 }
 
-/* The hovered project goes gray, links and all, with a thin gray frame. A
-   shadow rather than a border, so the layout stays as it is, and rather than an
-   outline, which Chrome rounds up to 1px. */
+/* The selected project (hovered, or its poster in the strip below) goes gray,
+   links and all. */
 @media (hover: hover) {
-  .cell:hover,
-  .grid .cell:hover a {
+  .selected,
+  .grid .selected a {
     color: #808080;
-  }
-
-  .cell:hover {
-    box-shadow: 0 0 0 0.5px #808080;
   }
 }
 
