@@ -36,6 +36,7 @@ export const INDEX_QUERY = defineQuery(`
     _id,
     title,
     year,
+    genre,
     "slug": slug.current,
     "designers": credits[role == "Poster Design"]{_key, role, name, url},
     "crew": credits[role != "Poster Design"]{_key, role, name, url}
@@ -43,7 +44,7 @@ export const INDEX_QUERY = defineQuery(`
 `)
 
 export const ABOUT_QUERY = defineQuery(`
-  *[_id == "about"][0]{body}
+  *[_id == "about"][0]{body, column}
 `)
 
 export type Credit = {
@@ -76,6 +77,7 @@ export type IndexEntry = {
   _id: string
   title: string | null
   year: number | null
+  genre: string | null
   slug: string | null
   designers: Credit[] | null
   crew: Credit[] | null
@@ -83,4 +85,5 @@ export type IndexEntry = {
 
 export type About = {
   body: PortableTextBlock[] | null
+  column: PortableTextBlock[] | null
 } | null

@@ -35,6 +35,11 @@ export const poster = defineType({
       validation: (rule) => rule.integer().min(1900).max(2100),
     }),
     defineField({
+      name: 'genre',
+      description: 'Shown on the Index page, e.g. “Short Fiction, 13 min”.',
+      type: 'string',
+    }),
+    defineField({
       name: 'image',
       title: 'Poster',
       description: 'WebP, JPG, PNG or animated GIF. Portrait (A-series ratio) looks best.',

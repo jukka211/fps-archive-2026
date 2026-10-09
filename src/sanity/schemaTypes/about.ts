@@ -39,6 +39,14 @@ export const about = defineType({
       of: [simpleBlock],
     }),
     defineField({
+      name: 'column',
+      title: 'Fourth column',
+      description:
+        'Shown in the right quarter of the page (below the text on phones), e.g. past presentations. One block per paragraph; Shift+Enter for a new line.',
+      type: 'array',
+      of: [simpleBlock],
+    }),
+    defineField({
       name: 'colophon',
       description: 'Credit line. Not shown on the site at the moment.',
       type: 'array',

@@ -23,8 +23,8 @@ const mod = (n: number, total: number) => ((n % total) + total) % total
  *
  * The thumbnails are dimmed; the hovered poster (every copy of it) shows at
  * full opacity, and a click opens it, large, on the home page. Pass `highlight`
- * to light up a poster from outside instead (null for none), and `onHover` to
- * hear which one is hovered.
+ * to light up posters from outside instead (their ids, or null for none), and
+ * `onHover` to hear which one is hovered.
  */
 export function PosterStrip({
   posters,
@@ -32,14 +32,14 @@ export function PosterStrip({
   onHover,
 }: {
   posters: Poster[]
-  highlight?: string | null
+  highlight?: string[] | null
   onHover?: (id: string | null) => void
 }) {
   const [hovered, setHovered] = useState<string | null>(null)
   const total = posters.length
   if (total === 0) return null
 
-  const lit = highlight === undefined ? hovered : highlight
+  const lit = highlight === undefined ? (hovered ? [hovered] : []) : (highlight ?? [])
   const hover = (id: string | null) => {
     setHovered(id)
     onHover?.(id)
@@ -55,7 +55,7 @@ export function PosterStrip({
       {slots.map((index, i) => {
         const poster = posters[index]
         const props = {
-          className: poster._id === lit ? styles.thumb : `${styles.thumb} ${styles.dim}`,
+          className: lit.includes(poster._id) ? styles.thumb : `${styles.thumb} ${styles.dim}`,
           style: {aspectRatio: `${poster.image.width} / ${poster.image.height}`},
           onMouseEnter: () => hover(poster._id),
           onMouseLeave: () => hover(null),

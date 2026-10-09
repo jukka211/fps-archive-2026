@@ -13,8 +13,10 @@ import styles from './Archive.module.css'
 // middle, so the strip loops and can be scrolled either way.
 const LOOP_CYCLES = 12
 const SPRING = {type: 'spring', stiffness: 210, damping: 26, mass: 0.9} as const
-// Off until the project pages have content: the large poster doesn't link
-// anywhere yet.
+// Fading in and out (dimming, hovering) quicker than the spring, so it follows the mouse.
+const FADE = {duration: 0.15} as const
+// Off until the project pages have content: until then the large poster links
+// to the Index.
 const LINK_PROJECTS = false
 
 type Metrics = {width: number; height: number; thumb: number; gap: number; step: number}
@@ -25,9 +27,11 @@ const mod = (n: number, total: number) => ((n % total) + total) % total
  * The poster strip, on desktop and mobile. Scrolling (swipe, mouse wheel,
  * trackpad or ← →) moves through the posters one `--scroll-step` at a time.
  * Once scrolled or clicked, the poster in the centre is large and the rest are
- * thumbnails, all animated with a spring; the large one links to its project
- * page (once LINK_PROJECTS is on). The strip loops. With `start`, it opens on
+ * thumbnails, all animated with a spring; the large one links to the Index
+ * (or to its project page, once LINK_PROJECTS is on). The strip loops. With `start`, it opens on
  * that poster, large.
+ *
+ * Hovering a poster with the mouse dims all the others to 0.2.
  *
  * `reveal` (0–1) is for the intro: only the thumbnails whose centre lies within
  * that fraction of the width, from the left, are shown. They appear at once,
@@ -53,6 +57,8 @@ export function PosterCarousel({
   const [step, setStep] = useState(startStep)
   const [large, setLarge] = useState(start !== null)
   const [metrics, setMetrics] = useState<Metrics | null>(null)
+  // The card (its slot) under the mouse.
+  const [hovered, setHovered] = useState<number | null>(null)
 
   // Measure the strip and read the sizes from the CSS variables, which differ
   // per screen size. Again whenever it changes size.
@@ -130,15 +136,16 @@ export function PosterCarousel({
     if (next === stepRef.current) return
     stepRef.current = next
     setStep(next)
+    // The cards slide away from under the mouse.
+    setHovered(null)
     setLarge(true)
     onChange(mod(next, total), true)
   }
 
   function onClick(index: number, distance: number) {
     if (distance === 0) {
-      // Large: the link on top of it opens the project page, or, while there
-      // are no project pages, the click does nothing.
-      if (large && posters[index].slug) return
+      // Large: the link on top of it opens the Index (or the project page).
+      if (large) return
       setLarge(!large)
       onChange(index, !large)
     } else if (!large && metrics) {
@@ -173,6 +180,13 @@ export function PosterCarousel({
     return slots
   }, [metrics, posters, total, step, large])
 
+  // The hovered poster in full, the rest dimmed; otherwise, while one is large,
+  // the rest a little dimmed.
+  const opacity = (slot: number, distance: number) => {
+    if (hovered !== null) return slot === hovered ? 1 : 0.2
+    return large && distance !== 0 ? 0.4 : 1
+  }
+
   return (
     <div ref={scrollerRef} className={styles.carousel} onScroll={onScroll}>
       <div className={styles.carouselStage}>
@@ -181,24 +195,25 @@ export function PosterCarousel({
             key={slot}
             className={styles.carouselCard}
             initial={false}
-            animate={{x, width: w, height: h, opacity: large && distance !== 0 ? 0.4 : 1}}
-            transition={SPRING}
+            animate={{x, width: w, height: h, opacity: opacity(slot, distance)}}
+            transition={{...SPRING, opacity: FADE}}
             style={{visibility: reveal >= 1 || x + w / 2 <= reveal * (metrics?.width ?? 0) ? undefined : 'hidden'}}
             onClick={() => onClick(index, distance)}
+            onPointerEnter={(e) => e.pointerType === 'mouse' && setHovered(slot)}
+            onPointerLeave={() => setHovered((current) => (current === slot ? null : current))}
             data-poster-index={index}
             data-distance={distance}
           >
             <PosterImage poster={poster} />
-            {distance === 0 && large && poster.slug ? (
-              LINK_PROJECTS ? (
+            {distance === 0 && large ? (
+              LINK_PROJECTS && poster.slug ? (
                 <Link
                   href={`/projects/${poster.slug}`}
                   className={styles.carouselLink}
                   aria-label={`Open “${poster.title}”`}
                 />
               ) : (
-                // In the link's place: nothing to click, so the normal pointer.
-                <div className={`${styles.carouselLink} ${styles.inert}`} />
+                <Link href="/projects" className={styles.carouselLink} aria-label="Open the Index" />
               )
             ) : null}
           </motion.div>

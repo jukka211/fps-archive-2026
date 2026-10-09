@@ -19,14 +19,29 @@
   color: #fff;
 }
 
-/* Right under the top bar; the poster strip is pushed to the bottom. */
-.text {
+/* Right under the top bar; the poster strip is pushed to the bottom. The
+   screen in four columns: the text across all of them, the fourth column
+   (e.g. past presentations) in the last, right below the text. */
+.columns {
   margin-bottom: auto;
-  /* Sides: with the page's 8px margins, 10px from the screen edges. Bottom:
-     kept clear of the strip on short screens. */
-  padding: 0 2px 24px;
+  /* Top: 8px below the top bar, as the Index. Sides: with the page's 8px
+     margins, 10px from the screen edges. Bottom: kept clear of the strip on
+     short screens. */
+  padding: 8px 2px 24px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 20px;
   /* Text sizes as on the Index page. */
   line-height: 11pt;
+}
+
+.text {
+  grid-column: 1 / -1;
+}
+
+.column {
+  grid-column: 4;
+  grid-row: 2;
 }
 
 .text p {
@@ -39,8 +54,24 @@
   content: ' ';
 }
 
+/* The fourth column keeps its paragraphs apart. */
+.column p {
+  margin: 0;
+}
+
+.column p + p {
+  margin-top: 12px;
+}
+
+/* Mobile: one column, the fourth column's text below the rest. */
 @media screen and (max-width: 800px) {
-  .text {
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
     font-size: 11.5px;
+  }
+
+  .text,
+  .column {
+    grid-column: 1;
   }
 }

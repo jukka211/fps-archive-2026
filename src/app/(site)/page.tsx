@@ -1,6 +1,7 @@
 import {Suspense} from 'react'
 
 import {Archive, ArchiveFromUrl} from '@/components/Archive'
+import {PageTransition} from '@/components/PageTransition'
 import {sanityFetch} from '@/sanity/live'
 import {POSTERS_QUERY, type Poster} from '@/sanity/queries'
 
@@ -11,8 +12,10 @@ export default async function Home() {
   // Opening on a poster (/?poster=echo) depends on the address, which is read in
   // the browser: the page is prerendered as it shows without one.
   return (
-    <Suspense fallback={<Archive posters={posters} />}>
-      <ArchiveFromUrl posters={posters} />
-    </Suspense>
+    <PageTransition>
+      <Suspense fallback={<Archive posters={posters} />}>
+        <ArchiveFromUrl posters={posters} />
+      </Suspense>
+    </PageTransition>
   )
 }

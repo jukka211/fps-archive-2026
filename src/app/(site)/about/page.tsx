@@ -2,6 +2,7 @@ import type {Metadata} from 'next'
 import {PortableText, type PortableTextComponents} from 'next-sanity'
 
 import {Information} from '@/components/Information'
+import {PageTransition} from '@/components/PageTransition'
 import {PosterStrip} from '@/components/PosterStrip'
 import {sanityFetch} from '@/sanity/live'
 import {ABOUT_QUERY, POSTERS_QUERY, type About, type Poster} from '@/sanity/queries'
@@ -26,12 +27,21 @@ export default async function AboutPage() {
   const about = data as About
 
   return (
-    <div className={styles.page}>
-      <Information />
-      <div className={styles.text}>
-        {about?.body ? <PortableText value={about.body} components={components} /> : null}
+    <PageTransition>
+      <div className={styles.page}>
+        <Information />
+        <div className={styles.columns}>
+          <div className={styles.text}>
+            {about?.body ? <PortableText value={about.body} components={components} /> : null}
+          </div>
+          {about?.column ? (
+            <div className={styles.column}>
+              <PortableText value={about.column} components={components} />
+            </div>
+          ) : null}
+        </div>
+        <PosterStrip posters={(posters ?? []) as Poster[]} />
       </div>
-      <PosterStrip posters={(posters ?? []) as Poster[]} />
-    </div>
+    </PageTransition>
   )
 }

@@ -1,5 +1,6 @@
 import type {Metadata} from 'next'
 
+import {PageTransition} from '@/components/PageTransition'
 import {ProjectIndex} from '@/components/ProjectIndex'
 import {sanityFetch} from '@/sanity/live'
 import {INDEX_QUERY, POSTERS_QUERY, type IndexEntry, type Poster} from '@/sanity/queries'
@@ -14,5 +15,9 @@ export default async function IndexPage() {
     sanityFetch({query: POSTERS_QUERY}),
   ])
 
-  return <ProjectIndex entries={(entries ?? []) as IndexEntry[]} posters={(posters ?? []) as Poster[]} />
+  return (
+    <PageTransition>
+      <ProjectIndex entries={(entries ?? []) as IndexEntry[]} posters={(posters ?? []) as Poster[]} />
+    </PageTransition>
+  )
 }

@@ -1,37 +1,13 @@
-'use client'
-
-import {useEffect, useState} from 'react'
-
 import styles from './Counter.module.css'
 
 /**
  * The giant “23FPS” behind the home and About pages: `value`, then FPS. On
- * phones it sits a little above the middle of the screen until the first touch,
- * click, scroll or key press, then moves up out of the posters' way. `raised`
- * starts it up there, e.g. when the page opens on a large poster.
+ * phones it stays in the centre of the screen.
  */
-export function Counter({
-  value,
-  dimmed,
-  raised: startRaised = false,
-}: {
-  value: string
-  dimmed: boolean
-  raised?: boolean
-}) {
-  const [raised, setRaised] = useState(startRaised)
-
-  useEffect(() => {
-    if (raised) return
-    const raise = () => setRaised(true)
-    const events = ['pointerdown', 'wheel', 'keydown'] as const
-    events.forEach((type) => window.addEventListener(type, raise, {passive: true}))
-    return () => events.forEach((type) => window.removeEventListener(type, raise))
-  }, [raised])
-
+export function Counter({value, dimmed}: {value: string; dimmed: boolean}) {
   return (
     <div className={styles.layer} aria-hidden>
-      <div className={styles.counter} data-dimmed={dimmed} data-raised={raised}>
+      <div className={styles.counter} data-dimmed={dimmed}>
         <span>{value}</span>
         <span>FPS</span>
       </div>

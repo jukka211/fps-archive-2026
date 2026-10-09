@@ -118,15 +118,11 @@
   object-fit: cover;
 }
 
-/* Covers the large centre poster: clicking it opens the project page. */
+/* Covers the large centre poster: clicking it opens the Index (or, later,
+   the project page). */
 .carouselLink {
   position: absolute;
   inset: 0;
-}
-
-/* In the link's place while there are no project pages. */
-.inert {
-  cursor: default;
 }
 
 @media screen and (min-width: 2239px) and (max-width: 2800px) {

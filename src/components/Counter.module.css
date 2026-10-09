@@ -51,11 +51,11 @@
 }
 
 @media screen and (max-width: 800px) {
-  /* A little above the middle of the screen, until the first touch or scroll.
-     As wide as the page margins allow: the letters span 2.23em at this
-     letter-spacing (the digits are all the same width). */
+  /* Always in the centre of the screen: the digits, not their line, centred on
+     it (less 0.044em). As wide as the page margins allow: the letters span
+     2.23em at this letter-spacing (the digits are all the same width). */
   .counter {
-    top: 46%;
+    top: calc(50% - 0.044em);
     left: 0;
     right: 0;
     width: auto;
@@ -71,28 +71,5 @@
      (not their boxes, the S has a wider side than the 2) are centred. */
   .counter span:last-child {
     margin-right: 0.033em;
-  }
-
-  /* Then halfway between the top bar (16pt) and the top of a large poster: as
-     wide as the strip allows (all but the page margins and a thumbnail each
-     side), √2 times as tall for a typical poster, 10px off the bottom. The
-     thumbnail sizes come from the home page; the fallbacks are the same, so the
-     counter sits in the same place on the About page. */
-  .counter[data-raised='true'] {
-    --poster-top: calc(
-      100dvh - 10px - (100vw - 16px - 2 * (var(--thumb-width, 32px) + var(--thumb-gap, 8px))) *
-        1.414
-    );
-    /* Less 0.044em to centre the digits, rather than the line, on that point. */
-    top: calc((16pt + var(--poster-top)) / 2 - 0.044em);
-  }
-}
-
-/* Small phones (iPhone 6/7/8/SE: 667px): no room for it above the posters, so
-   instead of moving up it fades out. By screen height, which unlike the
-   viewport's doesn't shrink under the browser's toolbars. */
-@media screen and (max-width: 800px) and (max-device-height: 694px) {
-  .counter[data-raised='true'] {
-    opacity: 0;
   }
 }

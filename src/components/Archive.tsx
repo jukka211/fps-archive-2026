@@ -1,11 +1,12 @@
 'use client'
 
 import {useSearchParams} from 'next/navigation'
-import {useEffect, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 
 import type {Poster} from '@/sanity/queries'
 
 import {Counter} from './Counter'
+import {frames} from './frames'
 import {Information} from './Information'
 import {PosterCarousel} from './PosterCarousel'
 import styles from './Archive.module.css'
@@ -28,10 +29,21 @@ export function ArchiveFromUrl({posters}: {posters: Poster[]}) {
 
 /** The home page. With `start`, it skips the intro and opens on that poster, large. */
 export function Archive({posters, start = null}: {posters: Poster[]; start?: number | null}) {
-  const total = posters.length
+  // Each poster's number, e.g. 01FPS for both Echo posters (see frames.ts).
+  const frameOf = useMemo(
+    () =>
+      frames(
+        posters.map((poster) => ({
+          ...poster,
+          designers: poster.credits?.filter((credit) => credit.role === 'Poster Design') ?? null,
+        })),
+      ),
+    [posters],
+  )
+  const total = Math.max(0, ...frameOf)
 
-  // Counts 0 → total at `total` frames per second on load, e.g. 0FPS … 23FPS,
-  // while the poster strip appears from left to right.
+  // Counts 0 → the last number at `total` frames per second on load, e.g.
+  // 0FPS … 21FPS, while the poster strip appears from left to right.
   const [count, setCount] = useState(0)
   // Poster in the centre of the strip once the visitor has scrolled or clicked:
   // its title and credits show, and its number replaces the count, e.g. 05FPS.
@@ -51,13 +63,13 @@ export function Archive({posters, start = null}: {posters: Poster[]; start?: num
   }, [total, start])
 
   const current = selected ? posters[selected.index] : undefined
-  const counter = selected ? pad(selected.index + 1) : String(count)
+  const counter = selected ? pad(frameOf[selected.index]) : String(count)
 
   return (
     <div className={styles.page}>
       <Information title={current?.title} year={current?.year} />
 
-      <Counter value={counter} dimmed={Boolean(selected?.large)} raised={start !== null} />
+      <Counter value={counter} dimmed={Boolean(selected?.large)} />
 
       <PosterCarousel
         posters={posters}

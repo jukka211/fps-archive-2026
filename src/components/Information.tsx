@@ -14,7 +14,8 @@ export function Information({title, year}: {title?: string | null; year?: number
   const current = (href: string) => (pathname === href ? styles.current : undefined)
 
   return (
-    <header className={styles.information}>
+    // Named, so page transitions leave it in place (globals.css).
+    <header className={styles.information} style={{viewTransitionName: 'site-header'}}>
       <Link href="/" className={styles.home}>FPS Archive</Link>
       <span className={styles.title}>{title ? `“${title}”${year ? ` ${year}` : ''}` : null}</span>
       <nav className={styles.nav}>

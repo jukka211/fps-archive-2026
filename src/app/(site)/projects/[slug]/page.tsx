@@ -2,6 +2,7 @@ import type {Metadata} from 'next'
 import {notFound} from 'next/navigation'
 
 import {Information} from '@/components/Information'
+import {PageTransition} from '@/components/PageTransition'
 import {sanityFetch} from '@/sanity/live'
 import {PROJECT_QUERY, PROJECT_SLUGS_QUERY, type Project} from '@/sanity/queries'
 
@@ -28,5 +29,9 @@ export default async function ProjectPage({params}: Props) {
   if (!project) notFound()
 
   // Project content comes later; for now only the top bar.
-  return <Information title={project.title} year={project.year} />
+  return (
+    <PageTransition>
+      <Information title={project.title} year={project.year} />
+    </PageTransition>
+  )
 }
