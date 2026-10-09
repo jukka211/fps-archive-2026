@@ -22,6 +22,7 @@
   padding: 8px 2px 24px;
   list-style: none;
   display: grid;
+  /* The Info page's rows use these columns too (about.module.css). */
   grid-template-columns:
     65px minmax(max-content, 2.5fr) minmax(max-content, 1.5fr) minmax(max-content, 2fr)
     minmax(0, 9.5fr) auto;

@@ -1,4 +1,4 @@
-/* The giant “23FPS” (Counter.tsx), ported from legacy/style.css. */
+/* The giant “FPS23” (Counter.tsx), ported from legacy/style.css. */
 
 /* Fixed, not absolute: it's 100vh tall, which in iOS Safari is taller than the
    visible page (100dvh) and would otherwise make the whole page scrollable.
@@ -22,54 +22,84 @@
   width: 100%;
   height: 100%;
   margin-right: 18px;
+  /* The letters' distance from the left and right edges of the screen. The
+     size follows, so the letters fit between. */
+  --edge: 28px;
   font-family: var(--font-condensed);
-  font-size: calc(100vw / 2.38);
+  font-size: calc((100vw - 2 * var(--edge) + 20px) / 2.34);
   line-height: 100vh;
-  letter-spacing: -20px;
+  --tracking: -20px;
+  letter-spacing: var(--tracking);
   white-space: nowrap;
-  text-align: center;
+  /* FPS against the left edge, the number against the right: only the space
+     between them changes with the number. */
+  left: 0;
+  margin: 0;
+  padding: 0 var(--edge);
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
   transform: translateY(-11%);
   transition: all 300ms ease-in-out;
 }
 
+/* The letters themselves, not their boxes, at the edges: less the F's
+   left side, and the last digit's right side after undoing the letter-spacing
+   that follows it. A final 1 is as wide as the other digits but thinner, with
+   more space on its right. (Measured; they render a little differently at the
+   phone size, below.) */
+.counter {
+  --f-side: 0.0714em;
+  --digit-side: 0.031em;
+  --one-side: 0.161em;
+}
+
+.counter span:first-child {
+  margin-left: calc(-1 * var(--f-side));
+}
+
+.counter span:last-child {
+  margin-right: calc(-1 * var(--tracking) - var(--digit-side));
+}
+
+.counter[data-final-one='true'] span:last-child {
+  margin-right: calc(-1 * var(--tracking) - var(--one-side));
+}
+
 /* Faded back, e.g. while a poster is zoomed. */
 .counter[data-dimmed='true'] {
-  opacity: 0.2;
+  opacity: 0.08;
 }
 
 @media screen and (min-width: 2239px) and (max-width: 2800px) {
   .counter {
-    letter-spacing: -40px;
+    --tracking: -40px;
   }
 }
 
 @media screen and (min-width: 2801px) and (max-width: 3699px) {
   .counter {
-    letter-spacing: -56px;
+    --tracking: -56px;
     transform: translateY(-6%);
   }
 }
 
 @media screen and (max-width: 800px) {
   /* Always in the centre of the screen: the digits, not their line, centred on
-     it (less 0.044em). As wide as the page margins allow: the letters span
-     2.23em at this letter-spacing (the digits are all the same width). */
+     it (less 0.044em). As big as the edges allow: the letters span 2.19em at
+     this letter-spacing (the digits are all the same width). */
   .counter {
     top: calc(50% - 0.044em);
     left: 0;
     right: 0;
     width: auto;
     height: auto;
-    margin: 0;
-    font-size: calc((100vw - 16px) / 2.23);
+    font-size: calc((100vw - 2 * var(--edge)) / 2.19);
     line-height: 1;
-    letter-spacing: -0.055em;
+    --tracking: -0.055em;
+    --f-side: 0.07em;
+    --digit-side: 0.025em;
+    --one-side: 0.155em;
     transform: translateY(-50%);
-  }
-
-  /* Letter-spacing follows the last letter too; undo most of it so the letters
-     (not their boxes, the S has a wider side than the 2) are centred. */
-  .counter span:last-child {
-    margin-right: 0.033em;
   }
 }

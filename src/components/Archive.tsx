@@ -29,7 +29,7 @@ export function ArchiveFromUrl({posters}: {posters: Poster[]}) {
 
 /** The home page. With `start`, it skips the intro and opens on that poster, large. */
 export function Archive({posters, start = null}: {posters: Poster[]; start?: number | null}) {
-  // Each poster's number, e.g. 01FPS for both Echo posters (see frames.ts).
+  // Each poster's number, e.g. FPS01 for both Echo posters (see frames.ts).
   const frameOf = useMemo(
     () =>
       frames(
@@ -43,10 +43,10 @@ export function Archive({posters, start = null}: {posters: Poster[]; start?: num
   const total = Math.max(0, ...frameOf)
 
   // Counts 0 → the last number at `total` frames per second on load, e.g.
-  // 0FPS … 21FPS, while the poster strip appears from left to right.
+  // FPS00 … FPS21, while the poster strip appears from left to right.
   const [count, setCount] = useState(0)
   // Poster in the centre of the strip once the visitor has scrolled or clicked:
-  // its title and credits show, and its number replaces the count, e.g. 05FPS.
+  // its title and credits show, and its number replaces the count, e.g. FPS05.
   const [selected, setSelected] = useState<{index: number; large: boolean} | null>(
     start === null ? null : {index: start, large: true},
   )
@@ -63,7 +63,7 @@ export function Archive({posters, start = null}: {posters: Poster[]; start?: num
   }, [total, start])
 
   const current = selected ? posters[selected.index] : undefined
-  const counter = selected ? pad(frameOf[selected.index]) : String(count)
+  const counter = pad(selected ? frameOf[selected.index] : count)
 
   return (
     <div className={styles.page}>

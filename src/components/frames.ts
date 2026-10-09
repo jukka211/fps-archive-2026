@@ -3,7 +3,7 @@ import type {Credit} from '@/sanity/queries'
 type Film = {title: string | null; year: number | null; designers: Credit[] | null}
 
 /**
- * Each poster's frame: its number, shown as e.g. 05FPS on the home page and the
+ * Each poster's frame: its number, shown as e.g. FPS05 on the home page and the
  * Index. Posters of the same film (title and year) by the same designers share
  * one, e.g. both of Lucas Hoffmann's Echo posters, so the numbers run 1, 2, 3 …
  * without gaps. Posters without designers get one each.

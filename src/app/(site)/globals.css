@@ -11,9 +11,10 @@ body {
   color: #fff;
 }
 
+/* Selected text turns black on the black page. */
 ::selection {
   color: #000;
-  background: #fff;
+  background: #000;
 }
 
 /* Page transitions (PageTransition.tsx): the old page fades out as the new one

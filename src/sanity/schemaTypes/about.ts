@@ -39,12 +39,34 @@ export const about = defineType({
       of: [simpleBlock],
     }),
     defineField({
-      name: 'column',
-      title: 'Fourth column',
-      description:
-        'Shown in the right quarter of the page (below the text on phones), e.g. past presentations. One block per paragraph; Shift+Enter for a new line.',
+      name: 'rows',
+      title: 'Rows below the text',
+      description: 'Listed under the text as on the Index: FPS, the title, then everything in it, e.g. past presentations.',
       type: 'array',
-      of: [simpleBlock],
+      of: [
+        defineArrayMember({
+          name: 'row',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'title',
+              description: 'e.g. Past presentations',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'text',
+              description: 'Comma-separated, e.g. “Rundgang, Academy of Fine Arts Stuttgart, 2022, BestOFF, …”',
+              type: 'text',
+              rows: 3,
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: {
+            select: {title: 'title', subtitle: 'text'},
+          },
+        }),
+      ],
     }),
     defineField({
       name: 'colophon',

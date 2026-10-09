@@ -44,7 +44,7 @@ export const INDEX_QUERY = defineQuery(`
 `)
 
 export const ABOUT_QUERY = defineQuery(`
-  *[_id == "about"][0]{body, column}
+  *[_id == "about"][0]{body, rows[]{_key, title, text}}
 `)
 
 export type Credit = {
@@ -85,5 +85,5 @@ export type IndexEntry = {
 
 export type About = {
   body: PortableTextBlock[] | null
-  column: PortableTextBlock[] | null
+  rows: {_key: string; title: string | null; text: string | null}[] | null
 } | null

@@ -5,26 +5,12 @@ import {useState} from 'react'
 
 import type {Credit, IndexEntry, Poster} from '@/sanity/queries'
 
+import {Counter} from './Counter'
 import {frames} from './frames'
 import {Information} from './Information'
+import {people} from './people'
 import {PosterStrip} from './PosterStrip'
 import styles from './ProjectIndex.module.css'
-
-/**
- * Everyone in these credits, once each, in order, with their link if any. A
- * name like “Felix Krisai & Pipi Fröstl” is two people; the credit's link goes
- * to the first of them.
- */
-function people(credits: Credit[] | null) {
-  const links = new Map<string, string | null>()
-  for (const credit of credits ?? []) {
-    credit.name?.split('&').forEach((part, i) => {
-      const name = part.trim()
-      if (name) links.set(name, links.get(name) || (i === 0 ? credit.url : null))
-    })
-  }
-  return [...links]
-}
 
 /** e.g. “F: Thomas Marciano, Elahe Aman”: no roles, names comma-separated, each linked when it has a URL. */
 function Names({label, credits, className}: {label: string; credits: Credit[] | null; className: string}) {
@@ -87,6 +73,8 @@ export function ProjectIndex({entries, posters}: {entries: IndexEntry[]; posters
   return (
     <div className={styles.page}>
       <Information />
+      {/* Behind the list, dimmed: how many there are, as the home page counts up to. */}
+      <Counter value={pad(list.length)} dimmed />
       <ol className={styles.list}>
         {list.map(({entry, frame, ids}) => (
           <li
@@ -103,7 +91,7 @@ export function ProjectIndex({entries, posters}: {entries: IndexEntry[]; posters
             onMouseLeave={() => setHovered((id) => (id && ids.includes(id) ? null : id))}
           >
             {/* Its frame: the number the home page's counter shows for its posters. */}
-            <div className={styles.number}>{pad(frame)}FPS</div>
+            <div className={styles.number}>FPS{pad(frame)}</div>
             <div className={styles.film}>
               {entry.slug ? (
                 // Opens the poster, large, on the home page, as the strip's thumbnails do.
