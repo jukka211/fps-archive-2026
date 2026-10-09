@@ -98,14 +98,14 @@
 @media (hover: hover) {
   .selected,
   .list .selected a {
-    color: #808080;
+    color: #636363;
   }
 }
 
 /* On phones, the project whose poster was last tapped in the strip, too. */
 .tapped,
 .list .tapped a {
-  color: #808080;
+  color: #636363;
 }
 
 /* Mobile: one project after another — its number on the left, and beside it

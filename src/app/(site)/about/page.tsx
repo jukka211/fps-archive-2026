@@ -4,6 +4,7 @@ import {PortableText, type PortableTextComponents} from 'next-sanity'
 
 import {Counter} from '@/components/Counter'
 import {frames} from '@/components/frames'
+import {HomeOnClick} from '@/components/HomeOnClick'
 import {Information} from '@/components/Information'
 import {PageTransition} from '@/components/PageTransition'
 import {people} from '@/components/people'
@@ -37,6 +38,7 @@ export default async function AboutPage() {
     <PageTransition>
       <div className={styles.page}>
         <Information />
+        <HomeOnClick />
         {/* Behind the text, dimmed. */}
         <Counter value={String(total).padStart(2, '0')} dimmed />
         <div className={styles.content}>

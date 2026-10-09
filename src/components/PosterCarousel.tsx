@@ -31,7 +31,8 @@ const mod = (n: number, total: number) => ((n % total) + total) % total
  * (or to its project page, once LINK_PROJECTS is on). The strip loops. With `start`, it opens on
  * that poster, large.
  *
- * Hovering a poster with the mouse dims all the others to 0.2.
+ * Hovering a poster with the mouse dims all the others to 0.2, but not the
+ * large one.
  *
  * `reveal` (0–1) is for the intro: only the thumbnails whose centre lies within
  * that fraction of the width, from the left, are shown. They appear at once,
@@ -180,9 +181,10 @@ export function PosterCarousel({
     return slots
   }, [metrics, posters, total, step, large])
 
-  // The hovered poster in full, the rest dimmed; otherwise, while one is large,
-  // the rest a little dimmed.
+  // The hovered poster in full, the rest dimmed, except the large one, which
+  // stays in full; otherwise, while one is large, the rest a little dimmed.
   const opacity = (slot: number, distance: number) => {
+    if (large && distance === 0) return 1
     if (hovered !== null) return slot === hovered ? 1 : 0.2
     return large && distance !== 0 ? 0.4 : 1
   }

@@ -68,7 +68,7 @@
 
 /* Faded back, e.g. while a poster is zoomed. */
 .counter[data-dimmed='true'] {
-  opacity: 0.08;
+  color: #1d1d1d;
 }
 
 @media screen and (min-width: 2239px) and (max-width: 2800px) {

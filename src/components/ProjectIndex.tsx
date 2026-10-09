@@ -7,6 +7,7 @@ import type {Credit, IndexEntry, Poster} from '@/sanity/queries'
 
 import {Counter} from './Counter'
 import {frames} from './frames'
+import {HomeOnClick} from './HomeOnClick'
 import {Information} from './Information'
 import {people} from './people'
 import {PosterStrip} from './PosterStrip'
@@ -73,6 +74,7 @@ export function ProjectIndex({entries, posters}: {entries: IndexEntry[]; posters
   return (
     <div className={styles.page}>
       <Information />
+      <HomeOnClick />
       {/* Behind the list, dimmed: how many there are, as the home page counts up to. */}
       <Counter value={pad(list.length)} dimmed />
       <ol className={styles.list}>

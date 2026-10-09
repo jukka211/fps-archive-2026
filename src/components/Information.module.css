@@ -26,15 +26,27 @@
 .nav {
   justify-self: end;
   white-space: nowrap;
-  color: #808080;
+  color: #636363;
 }
 
 .information .nav a {
-  color: #808080;
+  color: #636363;
 }
 
 .information .nav a.current {
   color: #fff;
+}
+
+/* On the home page, both white (and the comma between), and gray on hover. */
+.information .onHome,
+.information .onHome a {
+  color: #fff;
+}
+
+@media (hover: hover) {
+  .information .onHome a:hover {
+    color: #636363;
+  }
 }
 
 .nav {

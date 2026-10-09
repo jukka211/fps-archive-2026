@@ -7,7 +7,8 @@ import styles from './Information.module.css'
 
 /**
  * Top bar on every page: FPS Archive · “Title” Year · Index, Info. The link to
- * the page you're on is white, the other gray.
+ * the page you're on is white, the other gray; on the home page both are
+ * white, and gray on hover.
  */
 export function Information({title, year}: {title?: string | null; year?: number | null}) {
   const pathname = usePathname()
@@ -18,7 +19,7 @@ export function Information({title, year}: {title?: string | null; year?: number
     <header className={styles.information} style={{viewTransitionName: 'site-header'}}>
       <Link href="/" className={styles.home}>FPS Archive</Link>
       <span className={styles.title}>{title ? `“${title}”${year ? ` ${year}` : ''}` : null}</span>
-      <nav className={styles.nav}>
+      <nav className={pathname === '/' ? `${styles.nav} ${styles.onHome}` : styles.nav}>
         <Link href="/projects" className={current('/projects')}>Index</Link>,{' '}
         <Link href="/about" className={current('/about')}>Info</Link>
       </nav>
