@@ -101,20 +101,37 @@
   }
 }
 
+/* On phones, the project whose poster was last tapped in the strip, too. */
+.tapped,
+.list .tapped a {
+  color: #808080;
+}
+
 /* Mobile: one project after another — its number on the left, and beside it
    the film, genre, designers, crew and year, one under the other. */
 @media screen and (max-width: 800px) {
+  .page {
+    /* The poster strip, fixed over the bottom of the screen: 10px padding
+       around thumbnails up to ~1.6 times as tall as their 32px width
+       (PosterStrip.module.css). */
+    --strip-height: 72px;
+    padding-bottom: 0;
+  }
+
   .list {
     display: flex;
     flex-direction: column;
     gap: 32px;
-    padding: 8px 2px 56px;
+    /* Bottom: clear of the fixed poster strip. */
+    padding: 8px 2px calc(56px + var(--strip-height));
     font-size: 11.5px;
   }
 
   .entry {
     grid-template-columns: 92px minmax(0, 1fr);
     row-gap: 0px;
+    /* Where a tap on its poster in the strip scrolls it to. */
+    scroll-margin-top: 10px;
   }
 
   .number {

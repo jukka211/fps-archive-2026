@@ -21,7 +21,7 @@
 
 /* Right under the top bar; the poster strip is pushed to the bottom. The
    screen in four columns: the text across all of them, the fourth column
-   (e.g. past presentations) in the last, right below the text. */
+   (e.g. past presentations) in the last, 10px below the text. */
 .columns {
   margin-bottom: auto;
   /* Top: 8px below the top bar, as the Index. Sides: with the page's 8px
@@ -30,7 +30,7 @@
   padding: 8px 2px 24px;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  column-gap: 20px;
+  gap: 10px 20px;
   /* Text sizes as on the Index page. */
   line-height: 11pt;
 }

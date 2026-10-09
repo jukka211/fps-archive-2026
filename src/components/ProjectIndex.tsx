@@ -63,14 +63,26 @@ function rows(entries: IndexEntry[]) {
   return list
 }
 
+const pad = (n: number) => String(n).padStart(2, '0')
+
 /**
  * Index page: one project per row, with the poster strip below. Hovering a
  * row lights up its posters in the strip; hovering a poster selects its row.
+ * On phones, tapping a poster in the strip scrolls to its row and grays it.
  */
 export function ProjectIndex({entries, posters}: {entries: IndexEntry[]; posters: Poster[]}) {
   const [hovered, setHovered] = useState<string | null>(null)
+  // The poster last tapped in the strip on a phone.
+  const [tapped, setTapped] = useState<string | null>(null)
   const list = rows(entries)
   const selected = list.find(({ids}) => hovered && ids.includes(hovered))
+
+  const scrollTo = (id: string) => {
+    const row = list.find(({ids}) => ids.includes(id))
+    if (!row) return
+    setTapped(id)
+    document.getElementById(`fps-${pad(row.frame)}`)?.scrollIntoView({behavior: 'smooth', block: 'start'})
+  }
 
   return (
     <div className={styles.page}>
@@ -79,12 +91,19 @@ export function ProjectIndex({entries, posters}: {entries: IndexEntry[]; posters
         {list.map(({entry, frame, ids}) => (
           <li
             key={entry._id}
-            className={selected?.entry === entry ? `${styles.entry} ${styles.selected}` : styles.entry}
+            id={`fps-${pad(frame)}`}
+            className={[
+              styles.entry,
+              selected?.entry === entry ? styles.selected : null,
+              tapped && ids.includes(tapped) ? styles.tapped : null,
+            ]
+              .filter(Boolean)
+              .join(' ')}
             onMouseEnter={() => setHovered(entry._id)}
             onMouseLeave={() => setHovered((id) => (id && ids.includes(id) ? null : id))}
           >
             {/* Its frame: the number the home page's counter shows for its posters. */}
-            <div className={styles.number}>{String(frame).padStart(2, '0')}FPS</div>
+            <div className={styles.number}>{pad(frame)}FPS</div>
             <div className={styles.film}>
               {entry.slug ? (
                 // Opens the poster, large, on the home page, as the strip's thumbnails do.
@@ -103,7 +122,7 @@ export function ProjectIndex({entries, posters}: {entries: IndexEntry[]; posters
           </li>
         ))}
       </ol>
-      <PosterStrip posters={posters} highlight={selected?.ids ?? null} onHover={setHovered} />
+      <PosterStrip posters={posters} highlight={selected?.ids ?? null} onHover={setHovered} onSelect={scrollTo} />
     </div>
   )
 }

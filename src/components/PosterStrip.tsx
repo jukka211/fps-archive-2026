@@ -14,6 +14,8 @@ const RANGE = 30
 const SIZES = '(max-width: 800px) 32px, (min-width: 2801px) 82px, (min-width: 2239px) 76px, 60px'
 
 const mod = (n: number, total: number) => ((n % total) + total) % total
+// Phones, as in PosterStrip.module.css.
+const PHONE = '(max-width: 800px)'
 
 /**
  * A still row of poster thumbnails, laid out as the home page's strip before
@@ -25,15 +27,21 @@ const mod = (n: number, total: number) => ((n % total) + total) % total
  * full opacity, and a click opens it, large, on the home page. Pass `highlight`
  * to light up posters from outside instead (their ids, or null for none), and
  * `onHover` to hear which one is hovered.
+ *
+ * With `onSelect`, on phones the strip is fixed along the bottom of the screen
+ * instead, each poster once, from the first, swiped through sideways; tapping
+ * a poster calls `onSelect` with it rather than opening it.
  */
 export function PosterStrip({
   posters,
   highlight,
   onHover,
+  onSelect,
 }: {
   posters: Poster[]
   highlight?: string[] | null
   onHover?: (id: string | null) => void
+  onSelect?: (id: string) => void
 }) {
   const [hovered, setHovered] = useState<string | null>(null)
   const total = posters.length
@@ -45,20 +53,31 @@ export function PosterStrip({
     onHover?.(id)
   }
 
+  const select = (e: React.MouseEvent, id: string) => {
+    if (!onSelect || !window.matchMedia(PHONE).matches) return
+    e.preventDefault()
+    onSelect(id)
+  }
+
   const slots = []
-  for (let distance = -RANGE; distance <= RANGE; distance++) slots.push(mod(distance, total))
+  for (let distance = -RANGE; distance <= RANGE; distance++) slots.push(distance)
 
   // Mouse only: the thumbnails repeat, so they stay out of the tab order and
   // screen readers (the Index lists every project anyway).
   return (
-    <div className={styles.strip} aria-hidden>
-      {slots.map((index, i) => {
-        const poster = posters[index]
+    <div className={onSelect ? `${styles.strip} ${styles.swipe}` : styles.strip} aria-hidden>
+      {slots.map((distance, i) => {
+        const poster = posters[mod(distance, total)]
+        // The swipeable strip shows each poster once: the first round only.
+        const repeat = distance < 0 || distance >= total
         const props = {
-          className: lit.includes(poster._id) ? styles.thumb : `${styles.thumb} ${styles.dim}`,
+          className: [styles.thumb, lit.includes(poster._id) ? null : styles.dim, repeat ? styles.repeat : null]
+            .filter(Boolean)
+            .join(' '),
           style: {aspectRatio: `${poster.image.width} / ${poster.image.height}`},
           onMouseEnter: () => hover(poster._id),
           onMouseLeave: () => hover(null),
+          onClick: (e: React.MouseEvent) => select(e, poster._id),
         }
         const image = <PosterImage poster={poster} sizes={SIZES} still />
         return poster.slug ? (
