@@ -22,10 +22,11 @@
 /* Right under the top bar; the poster strip is pushed to the bottom. */
 .content {
   margin-bottom: auto;
-  /* Top: 8px below the top bar, as the Index. Sides: with the page's 8px
-     margins, 10px from the screen edges. Bottom: kept clear of the strip on
+  /* Top: 8px below the top bar, as the Index. Left: on the page's 8px margin,
+     level with "FPS Archive" in the top bar. Right: with the page's 8px
+     margin, 10px from the screen edge. Bottom: kept clear of the strip on
      short screens. */
-  padding: 8px 2px 24px;
+  padding: 8px 2px 24px 0;
   /* Text sizes as on the Index page. */
   line-height: 11pt;
 }

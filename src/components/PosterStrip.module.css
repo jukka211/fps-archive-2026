@@ -61,7 +61,20 @@
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scrollbar-width: none;
+  }
+
+  /* Each thumbnail on its own black ground, always at full opacity: only the
+     image dims, so the page doesn't show through a dimmed poster. */
+  .swipe .thumb {
     background: #000;
+  }
+
+  .swipe .dim {
+    opacity: 1;
+  }
+
+  .swipe .dim img {
+    opacity: 0.2;
   }
 
   .swipe::-webkit-scrollbar {
